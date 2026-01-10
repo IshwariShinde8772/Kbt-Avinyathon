@@ -11,6 +11,8 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Why Participate", path: "/#why-participate" },
     { name: "Process", path: "/#process" },
+    { name: "Sponsorship", path: "/#sponsorship" },
+    { name: "Rules", path: "/rules" },
   ];
 
   const isActive = (path: string) => {
