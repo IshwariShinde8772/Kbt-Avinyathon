@@ -1,10 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
@@ -16,18 +17,41 @@ const Navbar = () => {
   ];
 
   const isActive = (path: string) => {
-    if (path === "/") return location.pathname === "/";
-    return location.pathname === path || location.hash === path.replace("/", "");
+    if (path === "/") return location.pathname === "/" && !location.hash;
+    if (path.includes("#")) {
+      return location.pathname === "/" && location.hash === path.replace("/", "");
+    }
+    return location.pathname === path;
   };
 
-  const handleNavClick = (path: string) => {
+  // Handle hash scrolling after navigation
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    }
+  }, [location]);
+
+  const handleNavClick = (path: string, e: React.MouseEvent) => {
     setIsOpen(false);
     if (path.includes("#")) {
       const id = path.split("#")[1];
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+      // If we're on the home page, prevent default and scroll
+      if (location.pathname === "/") {
+        e.preventDefault();
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+          // Update URL hash without triggering navigation
+          window.history.pushState(null, "", path);
+        }
       }
+      // If not on home page, let the Link navigate (useEffect will handle scroll)
     }
   };
 
@@ -49,7 +73,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                onClick={() => handleNavClick(item.path)}
+                onClick={(e) => handleNavClick(item.path, e)}
                 className={`nav-link ${
                   isActive(item.path) ? "nav-link-active" : ""
                 }`}
@@ -77,7 +101,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                onClick={() => handleNavClick(item.path)}
+                onClick={(e) => handleNavClick(item.path, e)}
                 className={`block nav-link ${
                   isActive(item.path) ? "nav-link-active" : ""
                 }`}

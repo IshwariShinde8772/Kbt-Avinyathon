@@ -59,11 +59,19 @@ const HeroSection = () => {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <Link to="/#process">
-                <Button size="lg" variant="outline" className="px-8 py-6 text-lg rounded-xl border-2 border-foreground text-foreground hover:bg-muted">
-                  Learn How It Works
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="px-8 py-6 text-lg rounded-xl border-2 border-foreground text-foreground hover:bg-muted"
+                onClick={() => {
+                  const element = document.getElementById("process");
+                  if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                Learn How It Works
+              </Button>
             </div>
           </div>
 
