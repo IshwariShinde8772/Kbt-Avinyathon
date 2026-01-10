@@ -9,8 +9,8 @@ const HeroSection = () => {
       {/* Event Title Banner */}
       <div className="container mx-auto px-4 mb-8">
         <div className="inline-flex items-center gap-3 bg-accent rounded-2xl px-6 py-4">
-          <Sparkles className="w-8 h-8 text-primary" />
-          <h2 className="text-3xl md:text-4xl font-heading font-black text-primary">
+          <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+          <h2 className="text-3xl md:text-4xl font-heading font-black text-primary animate-blink">
             KBT AVINYATHON 2026
           </h2>
         </div>

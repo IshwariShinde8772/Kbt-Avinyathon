@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           additional_notes: string | null
           company_name: string
+          company_website: string | null
           contact_person: string
           created_at: string
           domain: string
@@ -32,11 +33,13 @@ export type Database = {
           problem_title: string
           resources_provided: string | null
           status: string
+          targeted_audience: string | null
           updated_at: string
         }
         Insert: {
           additional_notes?: string | null
           company_name: string
+          company_website?: string | null
           contact_person: string
           created_at?: string
           domain: string
@@ -51,11 +54,13 @@ export type Database = {
           problem_title: string
           resources_provided?: string | null
           status?: string
+          targeted_audience?: string | null
           updated_at?: string
         }
         Update: {
           additional_notes?: string | null
           company_name?: string
+          company_website?: string | null
           contact_person?: string
           created_at?: string
           domain?: string
@@ -70,6 +75,7 @@ export type Database = {
           problem_title?: string
           resources_provided?: string | null
           status?: string
+          targeted_audience?: string | null
           updated_at?: string
         }
         Relationships: []

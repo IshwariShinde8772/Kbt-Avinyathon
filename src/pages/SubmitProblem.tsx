@@ -20,9 +20,11 @@ const problemStatementSchema = z.object({
   contactName: z.string().min(2, "Contact name must be at least 2 characters").max(100),
   email: z.string().email("Please enter a valid email address").max(255),
   phone: z.string().min(10, "Please enter a valid phone number").max(15),
+  companyWebsite: z.string().url("Please enter a valid URL").max(255).optional().or(z.literal("")),
   domain: z.string().min(1, "Please select a domain"),
   problemTitle: z.string().min(5, "Problem title must be at least 5 characters").max(200),
   problemDescription: z.string().min(50, "Problem description must be at least 50 characters").max(2000),
+  targetedAudience: z.string().min(10, "Targeted audience must be at least 10 characters").max(500),
   expectedOutcome: z.string().min(20, "Expected outcome must be at least 20 characters").max(1000),
   resources: z.string().max(1000).optional(),
 });
@@ -64,9 +66,11 @@ const SubmitProblem = () => {
           contact_person: data.contactName,
           email: data.email,
           phone: data.phone,
+          company_website: data.companyWebsite || null,
           problem_title: data.problemTitle,
           problem_description: data.problemDescription,
           domain: data.domain,
+          targeted_audience: data.targetedAudience,
           expected_outcome: data.expectedOutcome,
           resources_provided: data.resources || null,
         });
@@ -173,6 +177,19 @@ const SubmitProblem = () => {
                       )}
                     </div>
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="companyWebsite">Company Website (Optional)</Label>
+                    <Input
+                      id="companyWebsite"
+                      type="url"
+                      placeholder="https://www.yourcompany.com"
+                      {...register("companyWebsite")}
+                    />
+                    {errors.companyWebsite && (
+                      <p className="text-destructive text-sm">{errors.companyWebsite.message}</p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Problem Statement */}
@@ -222,6 +239,19 @@ const SubmitProblem = () => {
                     />
                     {errors.problemDescription && (
                       <p className="text-destructive text-sm">{errors.problemDescription.message}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="targetedAudience">Targeted Audience / Users *</Label>
+                    <Textarea
+                      id="targetedAudience"
+                      placeholder="Who are the intended users or beneficiaries of this solution? (e.g., factory workers, customers, students, etc.)"
+                      rows={3}
+                      {...register("targetedAudience")}
+                    />
+                    {errors.targetedAudience && (
+                      <p className="text-destructive text-sm">{errors.targetedAudience.message}</p>
                     )}
                   </div>
 
