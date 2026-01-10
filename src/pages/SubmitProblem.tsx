@@ -82,7 +82,10 @@ const SubmitProblem = () => {
       });
       navigate("/");
     } catch (error) {
-      console.error("Error submitting:", error);
+      // Only log errors in development to prevent exposing database details in production
+      if (import.meta.env.DEV) {
+        console.error("Error submitting:", error);
+      }
       toast.error("Failed to submit", {
         description: "Please try again later.",
       });
