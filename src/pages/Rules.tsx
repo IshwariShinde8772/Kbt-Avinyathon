@@ -146,7 +146,7 @@ const Rules = () => {
       <Navbar />
       <main>
         {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-br from-primary/10 to-accent/10">
+        <section className="py-8 bg-gradient-to-br from-primary/10 to-accent/10">
           <div className="container mx-auto px-4 text-center">
             <span className="inline-flex items-center gap-2 bg-background border border-border text-foreground px-4 py-2 rounded-full text-sm font-medium mb-6">
               <BookOpen className="w-4 h-4 text-primary" />
