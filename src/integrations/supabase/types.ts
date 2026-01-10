@@ -14,7 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      problem_statements: {
+        Row: {
+          additional_notes: string | null
+          company_name: string
+          contact_person: string
+          created_at: string
+          domain: string
+          email: string
+          expected_outcome: string | null
+          id: string
+          internship_opportunity: boolean | null
+          mentorship_available: boolean | null
+          phone: string
+          prize_contribution: string | null
+          problem_description: string
+          problem_title: string
+          resources_provided: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          company_name: string
+          contact_person: string
+          created_at?: string
+          domain: string
+          email: string
+          expected_outcome?: string | null
+          id?: string
+          internship_opportunity?: boolean | null
+          mentorship_available?: boolean | null
+          phone: string
+          prize_contribution?: string | null
+          problem_description: string
+          problem_title: string
+          resources_provided?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          company_name?: string
+          contact_person?: string
+          created_at?: string
+          domain?: string
+          email?: string
+          expected_outcome?: string | null
+          id?: string
+          internship_opportunity?: boolean | null
+          mentorship_available?: boolean | null
+          phone?: string
+          prize_contribution?: string | null
+          problem_description?: string
+          problem_title?: string
+          resources_provided?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

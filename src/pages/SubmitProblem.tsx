@@ -13,6 +13,7 @@ import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, Send } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const problemStatementSchema = z.object({
   companyName: z.string().min(2, "Company name must be at least 2 characters").max(100),
@@ -55,17 +56,35 @@ const SubmitProblem = () => {
   const onSubmit = async (data: ProblemStatementForm) => {
     setIsSubmitting(true);
     
-    // For now, just show success message
-    // Firebase integration will be added when Cloud is enabled
-    console.log("Form data:", data);
-    
-    setTimeout(() => {
+    try {
+      const { error } = await supabase
+        .from("problem_statements")
+        .insert({
+          company_name: data.companyName,
+          contact_person: data.contactName,
+          email: data.email,
+          phone: data.phone,
+          problem_title: data.problemTitle,
+          problem_description: data.problemDescription,
+          domain: data.domain,
+          expected_outcome: data.expectedOutcome,
+          resources_provided: data.resources || null,
+        });
+
+      if (error) throw error;
+
       toast.success("Problem statement submitted successfully!", {
         description: "We will review your submission and get back to you soon.",
       });
-      setIsSubmitting(false);
       navigate("/");
-    }, 1500);
+    } catch (error) {
+      console.error("Error submitting:", error);
+      toast.error("Failed to submit", {
+        description: "Please try again later.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
