@@ -82,7 +82,48 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_problem_statements: {
+        Row: {
+          created_at: string | null
+          domain: string | null
+          expected_outcome: string | null
+          id: string | null
+          internship_opportunity: boolean | null
+          mentorship_available: boolean | null
+          problem_description: string | null
+          problem_title: string | null
+          resources_provided: string | null
+          status: string | null
+          targeted_audience: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          domain?: string | null
+          expected_outcome?: string | null
+          id?: string | null
+          internship_opportunity?: boolean | null
+          mentorship_available?: boolean | null
+          problem_description?: string | null
+          problem_title?: string | null
+          resources_provided?: string | null
+          status?: string | null
+          targeted_audience?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          domain?: string | null
+          expected_outcome?: string | null
+          id?: string | null
+          internship_opportunity?: boolean | null
+          mentorship_available?: boolean | null
+          problem_description?: string | null
+          problem_title?: string | null
+          resources_provided?: string | null
+          status?: string | null
+          targeted_audience?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
