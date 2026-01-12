@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +13,6 @@ import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft, Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 
 const problemStatementSchema = z.object({
   companyName: z.string().min(2, "Company name must be at least 2 characters").max(100),
@@ -45,6 +44,7 @@ const domains = [
 const SubmitProblem = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -59,30 +59,49 @@ const SubmitProblem = () => {
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase
-        .from("problem_statements")
-        .insert({
+      // Get Supabase URL from environment
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      
+      // Call the edge function with rate limiting instead of direct insert
+      const response = await fetch(`${supabaseUrl}/functions/v1/submit-problem`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           company_name: data.companyName,
           contact_person: data.contactName,
           email: data.email,
           phone: data.phone,
-          company_website: data.companyWebsite || null,
+          company_website: data.companyWebsite || undefined,
           problem_title: data.problemTitle,
           problem_description: data.problemDescription,
           domain: data.domain,
           targeted_audience: data.targetedAudience,
           expected_outcome: data.expectedOutcome,
-          resources_provided: data.resources || null,
-        });
+          resources_provided: data.resources || undefined,
+          honeypot: honeypotRef.current?.value || "", // Anti-bot field
+        }),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          toast.error("Too many submissions", {
+            description: "Please wait before submitting another problem statement.",
+          });
+          return;
+        }
+        throw new Error(result.error || "Submission failed");
+      }
 
       toast.success("Problem statement submitted successfully!", {
         description: "We will review your submission and get back to you soon.",
       });
       navigate("/");
     } catch (error) {
-      // Only log errors in development to prevent exposing database details in production
+      // Only log errors in development to prevent exposing details in production
       if (import.meta.env.DEV) {
         console.error("Error submitting:", error);
       }
@@ -281,6 +300,24 @@ const SubmitProblem = () => {
                     />
                   </div>
                 </div>
+
+                {/* Honeypot field - hidden from users, bots fill it */}
+                <input
+                  type="text"
+                  name="website_url"
+                  ref={honeypotRef}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  style={{
+                    position: "absolute",
+                    left: "-9999px",
+                    opacity: 0,
+                    height: 0,
+                    width: 0,
+                    overflow: "hidden",
+                  }}
+                  aria-hidden="true"
+                />
 
                 {/* Submit Button */}
                 <div className="pt-4">
