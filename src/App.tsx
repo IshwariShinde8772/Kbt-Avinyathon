@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import SubmitProblem from "./pages/SubmitProblem";
 import PartnerWithUs from "./pages/PartnerWithUs";
 import Rules from "./pages/Rules";
+import Sponsorship from "./pages/Sponsorship";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/submit" element={<SubmitProblem />} />
           <Route path="/partner" element={<PartnerWithUs />} />
           <Route path="/rules" element={<Rules />} />
+          <Route path="/sponsorship" element={<Sponsorship />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

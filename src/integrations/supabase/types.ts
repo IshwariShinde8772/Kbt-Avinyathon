@@ -27,6 +27,7 @@ export type Database = {
           id: string
           internship_opportunity: boolean | null
           mentorship_available: boolean | null
+          payment_proof_url: string | null
           phone: string
           prize_contribution: string | null
           problem_description: string
@@ -48,6 +49,7 @@ export type Database = {
           id?: string
           internship_opportunity?: boolean | null
           mentorship_available?: boolean | null
+          payment_proof_url?: string | null
           phone: string
           prize_contribution?: string | null
           problem_description: string
@@ -69,6 +71,7 @@ export type Database = {
           id?: string
           internship_opportunity?: boolean | null
           mentorship_available?: boolean | null
+          payment_proof_url?: string | null
           phone?: string
           prize_contribution?: string | null
           problem_description?: string
@@ -76,6 +79,54 @@ export type Database = {
           resources_provided?: string | null
           status?: string
           targeted_audience?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sponsorships: {
+        Row: {
+          additional_notes: string | null
+          company_name: string
+          company_website: string | null
+          contact_person: string
+          created_at: string
+          email: string
+          id: string
+          payment_proof_url: string | null
+          phone: string
+          sponsorship_amount: string | null
+          sponsorship_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          company_name: string
+          company_website?: string | null
+          contact_person: string
+          created_at?: string
+          email: string
+          id?: string
+          payment_proof_url?: string | null
+          phone: string
+          sponsorship_amount?: string | null
+          sponsorship_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          company_name?: string
+          company_website?: string | null
+          contact_person?: string
+          created_at?: string
+          email?: string
+          id?: string
+          payment_proof_url?: string | null
+          phone?: string
+          sponsorship_amount?: string | null
+          sponsorship_type?: string
+          status?: string
           updated_at?: string
         }
         Relationships: []

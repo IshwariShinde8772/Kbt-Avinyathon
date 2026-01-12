@@ -6,8 +6,8 @@ import hackathonHero from "@/assets/hackathon-hero.jpg";
 const HeroSection = () => {
   return (
     <section className="gradient-hero-bg py-8">
-      {/* Event Title Banner */}
-      <div className="container mx-auto px-4 mb-8">
+      {/* Event Title Banner - Centered */}
+      <div className="container mx-auto px-4 mb-8 text-center">
         <div className="inline-flex items-center gap-3 bg-accent rounded-2xl px-6 py-4">
           <Sparkles className="w-8 h-8 text-primary animate-pulse" />
           <h2 className="text-3xl md:text-4xl font-heading font-black text-primary animate-blink">

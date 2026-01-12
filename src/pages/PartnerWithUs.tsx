@@ -58,7 +58,7 @@ const PartnerWithUs = () => {
         <section className="gradient-benefits py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-heading font-black mb-6 text-primary-foreground">
+              <h1 className="text-4xl md:text-5xl font-heading font-black mb-6 text-primary-foreground" style={{ fontFamily: "'Poppins', sans-serif" }}>
                 Partner with KBT Avinyathon 2026
               </h1>
               <p className="text-primary-foreground/80 text-lg mb-8">
