@@ -145,63 +145,47 @@ const Rules = () => {
       <Header />
       <Navbar />
       <main>
-        {/* Hero Section */}
-        <section className="py-8 bg-gradient-to-br from-primary/10 to-accent/10">
+        {/* Hero Section - Compact */}
+        <section className="py-6 bg-gradient-to-br from-primary/10 to-accent/10">
           <div className="container mx-auto px-4 text-center">
-            <span className="inline-flex items-center gap-2 bg-background border border-border text-foreground px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <BookOpen className="w-4 h-4 text-primary" />
-              Guidelines
-            </span>
-            <h1 className="text-4xl md:text-5xl font-heading font-black mb-4 text-foreground">
+            <h1 className="text-3xl md:text-4xl font-heading font-black mb-2 text-foreground">
               Rules & Regulations
             </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-base">
               For Submitting Industry Problem Statements (KBT–Hackathon 2026)
             </p>
           </div>
         </section>
 
-        {/* Introduction */}
-        <section className="py-12 bg-muted/30">
+        {/* Rules Grid - Compact cards */}
+        <section className="py-8">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <p className="text-lg text-muted-foreground">
-                To ensure meaningful and feasible outcomes from student participants, 
-                industries are requested to follow the guidelines below while submitting problem statements.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Rules Grid */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
               {rules.map((rule) => (
                 <Card 
                   key={rule.number} 
                   className="hover:shadow-lg transition-all duration-300 border-border"
                 >
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <rule.icon className="w-6 h-6 text-primary" />
+                  <CardHeader className="pb-2 pt-4 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <rule.icon className="w-5 h-5 text-primary" />
                       </div>
-                      <div>
-                        <span className="text-sm font-medium text-primary">Rule {rule.number}</span>
-                        <CardTitle className="text-xl font-heading font-bold text-foreground mt-1">
+                      <div className="flex-1">
+                        <span className="text-xs font-medium text-primary">Rule {rule.number}</span>
+                        <CardTitle className="text-base font-heading font-bold text-foreground">
                           {rule.title}
                         </CardTitle>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
+                  <CardContent className="pt-0 pb-4 px-4">
+                    <ul className="space-y-1">
                       {rule.content.map((item, index) => (
                         <li 
                           key={index} 
-                          className={`text-muted-foreground ${
-                            item.startsWith("•") ? "pl-4" : ""
+                          className={`text-muted-foreground text-sm ${
+                            item.startsWith("•") ? "pl-3" : ""
                           }`}
                         >
                           {item}
@@ -215,18 +199,20 @@ const Rules = () => {
           </div>
         </section>
 
-        {/* Note Section */}
-        <section className="py-12 bg-primary/5">
+        {/* Note Section - Compact */}
+        <section className="py-6 bg-primary/5">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <AlertTriangle className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-heading font-bold text-foreground mb-4">
-                Important Note
-              </h3>
-              <p className="text-muted-foreground">
-                In case of any dispute, the college reserves the full authority to take the 
-                final decision and resolve the matter.
-              </p>
+            <div className="max-w-3xl mx-auto text-center flex items-center justify-center gap-4">
+              <AlertTriangle className="w-8 h-8 text-primary flex-shrink-0" />
+              <div className="text-left">
+                <h3 className="text-lg font-heading font-bold text-foreground">
+                  Important Note
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  In case of any dispute, the college reserves the full authority to take the 
+                  final decision and resolve the matter.
+                </p>
+              </div>
             </div>
           </div>
         </section>
