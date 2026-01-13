@@ -81,11 +81,6 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <Link to="/partner">
-              <Button variant="ghost" className="nav-link">
-                Partner with Avinyathon
-              </Button>
-            </Link>
             <Link to="/submit">
               <Button className="gradient-cta text-primary-foreground px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">
                 Submit Problem Statement
@@ -109,13 +104,6 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <Link
-              to="/partner"
-              onClick={() => setIsOpen(false)}
-              className="block nav-link"
-            >
-              Partner with Avinyathon
-            </Link>
             <Link to="/submit" onClick={() => setIsOpen(false)}>
               <Button className="w-full gradient-cta text-primary-foreground">
                 Submit Problem Statement

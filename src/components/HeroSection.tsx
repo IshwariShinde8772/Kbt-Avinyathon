@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import hackathonHero from "@/assets/hackathon-hero.jpg";
 
 const HeroSection = () => {
   return (
     <section className="gradient-hero-bg py-8">
-      {/* Event Title Banner - Centered */}
-      <div className="container mx-auto px-4 mb-8 text-center">
-        <div className="inline-flex items-center gap-3 bg-accent rounded-2xl px-6 py-4">
-          <Sparkles className="w-8 h-8 text-primary animate-pulse" />
-          <h2 className="text-3xl md:text-4xl font-heading font-black text-primary animate-blink">
-            KBT AVINYATHON 2026
-          </h2>
+      {/* Event Title Banner - Centered with Bold Styling */}
+      <div className="container mx-auto px-4 mb-8">
+        <div className="flex justify-center">
+          <div className="bg-[#1a1a1a] rounded-2xl px-8 py-6 shadow-2xl">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-[#ff6b00] text-center tracking-wide">
+              KBT AVINYATHON 2026
+            </h2>
+          </div>
         </div>
       </div>
 
