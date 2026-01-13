@@ -508,21 +508,57 @@ const SubmitProblem = () => {
                 {/* Step 3: Payment */}
                 {currentStep === 3 && (
                   <div className="space-y-6">
+                    {/* Payment Summary */}
+                    <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-6 border border-primary/20">
+                      <h3 className="text-xl font-heading font-bold mb-2 text-foreground">
+                        Payment Summary
+                      </h3>
+                      <p className="text-muted-foreground text-sm mb-3">
+                        Registration Fee: ₹5,000 per problem statement
+                      </p>
+                      <div className="bg-background rounded-lg p-4 border border-border">
+                        <p className="text-2xl font-heading font-bold text-primary text-center">
+                          Total: ₹{(fields.length * 5000).toLocaleString()}
+                        </p>
+                        <p className="text-muted-foreground text-sm text-center mt-1">
+                          ({fields.length} problem statement{fields.length > 1 ? 's' : ''})
+                        </p>
+                      </div>
+                    </div>
+
                     {/* Bank Details */}
                     <div className="bg-muted/50 rounded-xl p-6">
-                      <h3 className="text-lg font-heading font-bold mb-4 text-foreground">
+                      <h3 className="text-lg font-heading font-bold mb-4 text-foreground flex items-center gap-2">
+                        <CreditCard className="w-5 h-5 text-primary" />
                         Bank Transfer Details
                       </h3>
-                      <div className="bg-background rounded-lg p-4 border border-border">
-                        <p className="text-muted-foreground text-center">
-                          Bank details will be provided soon.
-                        </p>
-                        <p className="text-muted-foreground mt-4 text-sm text-center">
-                          Registration Fee: ₹5,000 per problem statement
-                        </p>
-                        <p className="text-primary font-semibold text-center mt-2">
-                          Total: ₹{(fields.length * 5000).toLocaleString()} ({fields.length} problem statement{fields.length > 1 ? 's' : ''})
-                        </p>
+                      <div className="bg-background rounded-lg p-5 border border-border space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Account Number</p>
+                            <p className="font-semibold text-foreground font-mono">99907771230011</p>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Customer Name</p>
+                            <p className="font-semibold text-foreground text-sm">PRIN MVPS KBGT COLLEGE OF ENGINEERING</p>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">IFSC Code</p>
+                            <p className="font-semibold text-foreground font-mono">HDFC0001241</p>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Branch Name</p>
+                            <p className="font-semibold text-foreground">PRODUCTIVITY HOUSE</p>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Branch Code</p>
+                            <p className="font-semibold text-foreground font-mono">1241</p>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Type of Account</p>
+                            <p className="font-semibold text-foreground">145 - SAVINGS ACCOUNT - TRUST</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
