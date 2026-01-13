@@ -1,4 +1,4 @@
-import { Award, Gift, Star, Building2, CheckCircle2 } from "lucide-react";
+import { Award, Gift, Star, Building2, CheckCircle2, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const sponsorshipTiers = [
@@ -58,6 +58,21 @@ const fundingInfo = [
   }
 ];
 
+const contactPersons = [
+  {
+    name: "Mr. Ajit Shiralkar",
+    phone: "9096394159"
+  },
+  {
+    name: "Mrs. Tejaswini Deshmukh",
+    phone: "9403498919"
+  },
+  {
+    name: "Mr. Pritesh Aher",
+    phone: "7588833992"
+  }
+];
+
 const SponsorshipSection = () => {
   return (
     <section id="sponsorship" className="py-20 bg-muted/30">
@@ -71,13 +86,40 @@ const SponsorshipSection = () => {
         </div>
 
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-8">
           <h2 className="text-4xl md:text-5xl font-heading font-black mb-4 text-foreground">
             Sponsorship Opportunities
           </h2>
           <p className="text-muted-foreground text-lg">
             Partner with us and gain visibility while supporting innovation
           </p>
+        </div>
+
+        {/* Contact Information */}
+        <div className="bg-gradient-to-r from-primary/10 to-accent/30 rounded-2xl p-6 mb-12 max-w-3xl mx-auto">
+          <div className="text-center mb-4">
+            <h3 className="text-xl font-heading font-bold text-foreground mb-2">
+              For More Information Regarding Sponsorship
+            </h3>
+            <p className="text-muted-foreground">Contact our sponsorship coordinators</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            {contactPersons.map((person, index) => (
+              <div 
+                key={index} 
+                className="bg-background rounded-xl p-4 text-center shadow-sm border border-border"
+              >
+                <p className="font-semibold text-foreground mb-2">{person.name}</p>
+                <a 
+                  href={`tel:${person.phone}`} 
+                  className="inline-flex items-center gap-2 text-primary hover:underline font-medium"
+                >
+                  <Phone className="w-4 h-4" />
+                  {person.phone}
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Sponsorship Tiers */}

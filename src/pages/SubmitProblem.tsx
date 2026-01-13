@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,17 @@ import { toast } from "sonner";
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, ArrowRight, Send, CheckCircle2, Building2, FileText, CreditCard, Upload } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, CheckCircle2, Building2, FileText, CreditCard, Upload, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+
+const problemSchema = z.object({
+  domain: z.string().min(1, "Please select a domain"),
+  problemTitle: z.string().min(5, "Problem title must be at least 5 characters").max(200),
+  problemDescription: z.string().min(50, "Problem description must be at least 50 characters").max(2000),
+  targetedAudience: z.string().min(10, "Targeted audience must be at least 10 characters").max(500),
+  expectedOutcome: z.string().min(20, "Expected outcome must be at least 20 characters").max(1000),
+  resources: z.string().max(1000).optional(),
+});
 
 const problemStatementSchema = z.object({
   companyName: z.string().min(2, "Company name must be at least 2 characters").max(100),
@@ -21,12 +30,7 @@ const problemStatementSchema = z.object({
   email: z.string().email("Please enter a valid email address").max(255),
   phone: z.string().min(10, "Please enter a valid phone number").max(15),
   companyWebsite: z.string().url("Please enter a valid URL").max(255).optional().or(z.literal("")),
-  domain: z.string().min(1, "Please select a domain"),
-  problemTitle: z.string().min(5, "Problem title must be at least 5 characters").max(200),
-  problemDescription: z.string().min(50, "Problem description must be at least 50 characters").max(2000),
-  targetedAudience: z.string().min(10, "Targeted audience must be at least 10 characters").max(500),
-  expectedOutcome: z.string().min(20, "Expected outcome must be at least 20 characters").max(1000),
-  resources: z.string().max(1000).optional(),
+  problems: z.array(problemSchema).min(1, "At least one problem statement is required"),
 });
 
 type ProblemStatementForm = z.infer<typeof problemStatementSchema>;
@@ -64,12 +68,28 @@ const SubmitProblem = () => {
     setValue,
     trigger,
     watch,
+    control,
     formState: { errors },
   } = useForm<ProblemStatementForm>({
     resolver: zodResolver(problemStatementSchema),
+    defaultValues: {
+      problems: [
+        {
+          domain: "",
+          problemTitle: "",
+          problemDescription: "",
+          targetedAudience: "",
+          expectedOutcome: "",
+          resources: "",
+        }
+      ]
+    }
   });
 
-  const watchedDomain = watch("domain");
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "problems",
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -109,7 +129,7 @@ const SubmitProblem = () => {
       const result = await trigger(["companyName", "contactName", "email", "phone", "companyWebsite"]);
       return result;
     } else if (step === 2) {
-      const result = await trigger(["domain", "problemTitle", "problemDescription", "targetedAudience", "expectedOutcome", "resources"]);
+      const result = await trigger(["problems"]);
       return result;
     }
     return true;
@@ -125,6 +145,23 @@ const SubmitProblem = () => {
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const addProblemStatement = () => {
+    append({
+      domain: "",
+      problemTitle: "",
+      problemDescription: "",
+      targetedAudience: "",
+      expectedOutcome: "",
+      resources: "",
+    });
+  };
+
+  const removeProblemStatement = (index: number) => {
+    if (fields.length > 1) {
+      remove(index);
     }
   };
 
@@ -162,43 +199,45 @@ const SubmitProblem = () => {
       // Get Supabase URL from environment
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       
-      // Call the edge function with rate limiting instead of direct insert
-      const response = await fetch(`${supabaseUrl}/functions/v1/submit-problem`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          company_name: data.companyName,
-          contact_person: data.contactName,
-          email: data.email,
-          phone: data.phone,
-          company_website: data.companyWebsite || undefined,
-          problem_title: data.problemTitle,
-          problem_description: data.problemDescription,
-          domain: data.domain,
-          targeted_audience: data.targetedAudience,
-          expected_outcome: data.expectedOutcome,
-          resources_provided: data.resources || undefined,
-          payment_proof_url: publicUrl,
-          honeypot: honeypotRef.current?.value || "",
-        }),
-      });
+      // Submit each problem statement
+      for (const problem of data.problems) {
+        const response = await fetch(`${supabaseUrl}/functions/v1/submit-problem`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            company_name: data.companyName,
+            contact_person: data.contactName,
+            email: data.email,
+            phone: data.phone,
+            company_website: data.companyWebsite || undefined,
+            problem_title: problem.problemTitle,
+            problem_description: problem.problemDescription,
+            domain: problem.domain,
+            targeted_audience: problem.targetedAudience,
+            expected_outcome: problem.expectedOutcome,
+            resources_provided: problem.resources || undefined,
+            payment_proof_url: publicUrl,
+            honeypot: honeypotRef.current?.value || "",
+          }),
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (!response.ok) {
-        if (response.status === 429) {
-          toast.error("Too many submissions", {
-            description: "Please wait before submitting another problem statement.",
-          });
-          return;
+        if (!response.ok) {
+          if (response.status === 429) {
+            toast.error("Too many submissions", {
+              description: "Please wait before submitting another problem statement.",
+            });
+            return;
+          }
+          throw new Error(result.error || "Submission failed");
         }
-        throw new Error(result.error || "Submission failed");
       }
 
-      toast.success("Problem statement submitted successfully!", {
-        description: "We will review your submission and get back to you soon.",
+      toast.success("Problem statement(s) submitted successfully!", {
+        description: `${data.problems.length} problem statement(s) submitted. We will review and get back to you soon.`,
       });
       navigate("/");
     } catch (error) {
@@ -221,7 +260,7 @@ const SubmitProblem = () => {
 
       <main className="py-8">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             {/* Back Button */}
             <Button
               variant="ghost"
@@ -272,7 +311,7 @@ const SubmitProblem = () => {
               </h1>
               <p className="text-muted-foreground mb-6 text-sm">
                 {currentStep === 1 && "Enter your company and contact information."}
-                {currentStep === 2 && "Describe your industry problem statement."}
+                {currentStep === 2 && "Describe your industry problem statement(s). You can add multiple problems."}
                 {currentStep === 3 && "Complete your payment and upload proof."}
               </p>
 
@@ -348,110 +387,143 @@ const SubmitProblem = () => {
                   </div>
                 )}
 
-                {/* Step 2: Problem Statement */}
+                {/* Step 2: Problem Statements */}
                 {currentStep === 2 && (
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="domain">Problem Domain *</Label>
-                      <Select 
-                        value={watchedDomain} 
-                        onValueChange={(value) => setValue("domain", value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a domain" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {domains.map((domain) => (
-                            <SelectItem key={domain} value={domain}>
-                              {domain}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.domain && (
-                        <p className="text-destructive text-sm">{errors.domain.message}</p>
-                      )}
-                    </div>
+                  <div className="space-y-6">
+                    {fields.map((field, index) => (
+                      <div key={field.id} className="border border-border rounded-xl p-6 relative">
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="font-heading font-bold text-lg text-foreground">
+                            Problem Statement {index + 1}
+                          </h3>
+                          {fields.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeProblemStatement(index)}
+                              className="text-destructive hover:text-destructive/80"
+                            >
+                              <Trash2 className="w-4 h-4 mr-1" />
+                              Remove
+                            </Button>
+                          )}
+                        </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="problemTitle">Problem Title *</Label>
-                      <Input
-                        id="problemTitle"
-                        placeholder="Enter a concise title for your problem"
-                        {...register("problemTitle")}
-                      />
-                      {errors.problemTitle && (
-                        <p className="text-destructive text-sm">{errors.problemTitle.message}</p>
-                      )}
-                    </div>
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <Label>Problem Domain *</Label>
+                            <Select 
+                              value={watch(`problems.${index}.domain`)} 
+                              onValueChange={(value) => setValue(`problems.${index}.domain`, value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a domain" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {domains.map((domain) => (
+                                  <SelectItem key={domain} value={domain}>
+                                    {domain}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            {errors.problems?.[index]?.domain && (
+                              <p className="text-destructive text-sm">{errors.problems[index].domain?.message}</p>
+                            )}
+                          </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="problemDescription">Problem Description *</Label>
-                      <Textarea
-                        id="problemDescription"
-                        placeholder="Describe your problem in detail. Include current challenges, pain points, and any relevant context."
-                        rows={4}
-                        {...register("problemDescription")}
-                      />
-                      {errors.problemDescription && (
-                        <p className="text-destructive text-sm">{errors.problemDescription.message}</p>
-                      )}
-                    </div>
+                          <div className="space-y-2">
+                            <Label>Problem Title *</Label>
+                            <Input
+                              placeholder="Enter a concise title for your problem"
+                              {...register(`problems.${index}.problemTitle`)}
+                            />
+                            {errors.problems?.[index]?.problemTitle && (
+                              <p className="text-destructive text-sm">{errors.problems[index].problemTitle?.message}</p>
+                            )}
+                          </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="targetedAudience">Targeted Audience / Users *</Label>
-                      <Textarea
-                        id="targetedAudience"
-                        placeholder="Who are the intended users or beneficiaries of this solution?"
-                        rows={2}
-                        {...register("targetedAudience")}
-                      />
-                      {errors.targetedAudience && (
-                        <p className="text-destructive text-sm">{errors.targetedAudience.message}</p>
-                      )}
-                    </div>
+                          <div className="space-y-2">
+                            <Label>Problem Description *</Label>
+                            <Textarea
+                              placeholder="Describe your problem in detail. Include current challenges, pain points, and any relevant context."
+                              rows={4}
+                              {...register(`problems.${index}.problemDescription`)}
+                            />
+                            {errors.problems?.[index]?.problemDescription && (
+                              <p className="text-destructive text-sm">{errors.problems[index].problemDescription?.message}</p>
+                            )}
+                          </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="expectedOutcome">Expected Outcome *</Label>
-                      <Textarea
-                        id="expectedOutcome"
-                        placeholder="What kind of solution are you looking for? What would success look like?"
-                        rows={3}
-                        {...register("expectedOutcome")}
-                      />
-                      {errors.expectedOutcome && (
-                        <p className="text-destructive text-sm">{errors.expectedOutcome.message}</p>
-                      )}
-                    </div>
+                          <div className="space-y-2">
+                            <Label>Targeted Audience / Users *</Label>
+                            <Textarea
+                              placeholder="Who are the intended users or beneficiaries of this solution?"
+                              rows={2}
+                              {...register(`problems.${index}.targetedAudience`)}
+                            />
+                            {errors.problems?.[index]?.targetedAudience && (
+                              <p className="text-destructive text-sm">{errors.problems[index].targetedAudience?.message}</p>
+                            )}
+                          </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="resources">Available Resources (Optional)</Label>
-                      <Textarea
-                        id="resources"
-                        placeholder="List any data, APIs, documentation, or other resources you can provide."
-                        rows={2}
-                        {...register("resources")}
-                      />
-                    </div>
+                          <div className="space-y-2">
+                            <Label>Expected Outcome *</Label>
+                            <Textarea
+                              placeholder="What kind of solution are you looking for? What would success look like?"
+                              rows={3}
+                              {...register(`problems.${index}.expectedOutcome`)}
+                            />
+                            {errors.problems?.[index]?.expectedOutcome && (
+                              <p className="text-destructive text-sm">{errors.problems[index].expectedOutcome?.message}</p>
+                            )}
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Available Resources (Optional)</Label>
+                            <Textarea
+                              placeholder="List any data, APIs, documentation, or other resources you can provide."
+                              rows={2}
+                              {...register(`problems.${index}.resources`)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Add More Problem Statement Button */}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={addProblemStatement}
+                      className="w-full border-dashed border-2"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Another Problem Statement
+                    </Button>
                   </div>
                 )}
 
                 {/* Step 3: Payment */}
                 {currentStep === 3 && (
                   <div className="space-y-6">
-                    {/* QR Code Placeholder */}
-                    <div className="bg-muted/50 rounded-xl p-6 text-center">
+                    {/* Bank Details */}
+                    <div className="bg-muted/50 rounded-xl p-6">
                       <h3 className="text-lg font-heading font-bold mb-4 text-foreground">
-                        Scan QR Code to Pay
+                        Bank Transfer Details
                       </h3>
-                      <div className="w-48 h-48 bg-muted rounded-lg mx-auto flex items-center justify-center border-2 border-dashed border-border">
-                        <p className="text-muted-foreground text-sm">
-                          QR Code<br />Coming Soon
+                      <div className="bg-background rounded-lg p-4 border border-border">
+                        <p className="text-muted-foreground text-center">
+                          Bank details will be provided soon.
+                        </p>
+                        <p className="text-muted-foreground mt-4 text-sm text-center">
+                          Registration Fee: ₹5,000 per problem statement
+                        </p>
+                        <p className="text-primary font-semibold text-center mt-2">
+                          Total: ₹{(fields.length * 5000).toLocaleString()} ({fields.length} problem statement{fields.length > 1 ? 's' : ''})
                         </p>
                       </div>
-                      <p className="text-muted-foreground mt-4 text-sm">
-                        Registration Fee: ₹XXXX (To be announced)
-                      </p>
                     </div>
 
                     {/* Upload Payment Proof */}
