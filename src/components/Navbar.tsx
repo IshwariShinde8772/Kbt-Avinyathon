@@ -24,6 +24,19 @@ const Navbar = () => {
     return location.pathname === path;
   };
 
+  // Scroll to element with offset so user sees partial next section
+  const scrollToElementWithOffset = (element: HTMLElement) => {
+    const navbarHeight = 60;
+    const offsetFromTop = 100; // Show section starting slightly below navbar
+    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+    const offsetPosition = elementPosition - navbarHeight - offsetFromTop;
+    
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth"
+    });
+  };
+
   // Handle hash scrolling after navigation
   useEffect(() => {
     if (location.hash) {
@@ -31,7 +44,7 @@ const Navbar = () => {
       setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
+          scrollToElementWithOffset(element);
         }
       }, 100);
     }
@@ -46,7 +59,7 @@ const Navbar = () => {
         e.preventDefault();
         const element = document.getElementById(id);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
+          scrollToElementWithOffset(element);
           // Update URL hash without triggering navigation
           window.history.pushState(null, "", path);
         }
