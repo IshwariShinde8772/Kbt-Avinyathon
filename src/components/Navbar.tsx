@@ -38,9 +38,10 @@ const Navbar = () => {
     });
   };
 
-  // Handle hash scrolling after navigation
+  // Handle hash scrolling after navigation - only for hash links, not initial page load
   useEffect(() => {
-    if (location.hash) {
+    // Only scroll to hash if it was a navigation event (not initial load)
+    if (location.hash && location.key !== "default") {
       const id = location.hash.replace("#", "");
       setTimeout(() => {
         const element = document.getElementById(id);
@@ -49,10 +50,22 @@ const Navbar = () => {
         }
       }, 100);
     }
-  }, [location]);
+  }, [location.hash, location.key]);
 
   const handleNavClick = (path: string, e: React.MouseEvent) => {
     setIsOpen(false);
+    
+    // Handle Home link - scroll to top
+    if (path === "/") {
+      if (location.pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        // Clear hash from URL
+        window.history.pushState(null, "", "/");
+      }
+      return;
+    }
+    
     if (path.includes("#")) {
       const id = path.split("#")[1];
       // If we're on the home page, prevent default and scroll
