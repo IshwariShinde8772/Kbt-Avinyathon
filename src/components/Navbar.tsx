@@ -27,9 +27,10 @@ const Navbar = () => {
   // Scroll to element with offset so user sees partial next section
   const scrollToElementWithOffset = (element: HTMLElement) => {
     const navbarHeight = 60;
-    const offsetFromTop = 100; // Show section starting slightly below navbar
+    const viewportHeight = window.innerHeight;
     const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-    const offsetPosition = elementPosition - navbarHeight - offsetFromTop;
+    // Position element so user can see there's more content below (show ~70% of viewport)
+    const offsetPosition = elementPosition - navbarHeight - (viewportHeight * 0.15);
     
     window.scrollTo({
       top: offsetPosition,

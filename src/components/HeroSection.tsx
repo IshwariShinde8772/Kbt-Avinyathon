@@ -6,15 +6,24 @@ import hackathonHero from "@/assets/hackathon-hero.jpg";
 const HeroSection = () => {
   return (
     <section className="gradient-hero-bg py-8">
-      {/* Event Title Banner - Clean and Centered */}
-      <div className="container mx-auto px-4 mb-8">
-        <div className="text-center">
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-heading font-black text-gradient whitespace-nowrap">
-            KBT AVINYATHON 2026
-          </h2>
-          <p className="text-muted-foreground mt-3 text-lg md:text-xl font-medium tracking-wide">
-            State-Level Industry Hackathon
-          </p>
+      {/* Event Title Banner - Animated with Background */}
+      <div className="container mx-auto px-4 mb-10">
+        <div className="flex justify-center">
+          <div className="relative inline-block">
+            {/* Animated background glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary rounded-2xl blur-xl opacity-40 animate-pulse" />
+            
+            {/* Main title container */}
+            <div className="relative bg-gradient-to-r from-primary/90 via-secondary to-primary/90 rounded-2xl px-8 md:px-12 py-5 md:py-6 shadow-2xl overflow-hidden">
+              {/* Shimmer animation overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              
+              {/* Title text */}
+              <h2 className="relative text-4xl md:text-6xl lg:text-7xl font-heading font-black text-white tracking-wide whitespace-nowrap drop-shadow-lg">
+                KBT AVINYATHON 2026
+              </h2>
+            </div>
+          </div>
         </div>
       </div>
 
