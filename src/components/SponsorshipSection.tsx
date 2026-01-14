@@ -75,10 +75,10 @@ const contactPersons = [
 
 const SponsorshipSection = () => {
   return (
-    <section id="sponsorship" className="py-20 bg-muted/30">
+    <section id="sponsorship" className="py-12 bg-muted/30">
       <div className="container mx-auto px-4">
         {/* Badge */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <span className="inline-flex items-center gap-2 bg-background border border-border text-foreground px-4 py-2 rounded-full text-sm font-medium">
             <Building2 className="w-4 h-4 text-primary" />
             Funding & Sponsorship
@@ -86,8 +86,8 @@ const SponsorshipSection = () => {
         </div>
 
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-8">
-          <h2 className="text-4xl md:text-5xl font-heading font-black mb-4 text-foreground">
+        <div className="text-center max-w-2xl mx-auto mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black mb-3 text-foreground whitespace-nowrap">
             Sponsorship Opportunities
           </h2>
           <p className="text-muted-foreground text-lg">
@@ -96,7 +96,7 @@ const SponsorshipSection = () => {
         </div>
 
         {/* Contact Information */}
-        <div className="bg-gradient-to-r from-primary/10 to-accent/30 rounded-2xl p-6 mb-12 max-w-3xl mx-auto">
+        <div className="bg-gradient-to-r from-primary/10 to-accent/30 rounded-2xl p-5 mb-8 max-w-3xl mx-auto">
           <div className="text-center mb-4">
             <h3 className="text-xl font-heading font-bold text-foreground mb-2">
               For More Information Regarding Sponsorship

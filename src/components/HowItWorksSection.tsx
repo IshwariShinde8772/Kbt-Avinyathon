@@ -53,7 +53,7 @@ const steps = [
 
 const HowItWorksSection = () => {
   return (
-    <section id="process" className="py-20 bg-muted/30">
+    <section id="process" className="py-12 bg-muted/30">
       <div className="container mx-auto px-4">
         {/* Badge */}
         <div className="text-center mb-8">

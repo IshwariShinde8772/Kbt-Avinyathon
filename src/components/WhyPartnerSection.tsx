@@ -47,7 +47,7 @@ const benefits = [
 
 const WhyPartnerSection = () => {
   return (
-    <section id="why-participate" className="py-20 bg-background">
+    <section id="why-participate" className="py-12 bg-background">
       <div className="container mx-auto px-4">
         {/* Badge */}
         <div className="text-center mb-8">
