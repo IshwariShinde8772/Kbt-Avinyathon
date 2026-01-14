@@ -6,34 +6,15 @@ import hackathonHero from "@/assets/hackathon-hero.jpg";
 const HeroSection = () => {
   return (
     <section className="gradient-hero-bg py-8">
-      {/* Event Title Banner - Centered with Bold Styling */}
-      <div className="container mx-auto px-4 mb-10">
-        <div className="flex justify-center">
-          <div className="relative">
-            {/* Glow effect behind */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary blur-3xl opacity-30 scale-110" />
-            
-            {/* Main banner */}
-            <div className="relative bg-gradient-to-br from-[#0a0a0a] via-[#1a1a2e] to-[#0a0a0a] rounded-3xl px-8 md:px-16 py-8 md:py-10 shadow-2xl border border-primary/20 overflow-hidden">
-              {/* Decorative elements */}
-              <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-2xl" />
-              <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-secondary/20 to-transparent rounded-full blur-2xl" />
-              <div className="absolute top-1/2 left-4 w-2 h-16 bg-gradient-to-b from-primary to-secondary rounded-full transform -translate-y-1/2" />
-              <div className="absolute top-1/2 right-4 w-2 h-16 bg-gradient-to-b from-secondary to-primary rounded-full transform -translate-y-1/2" />
-              
-              {/* Title text with gradient and glow */}
-              <h2 className="relative text-5xl md:text-6xl lg:text-8xl font-heading font-black text-center tracking-wider">
-                <span className="bg-gradient-to-r from-[#ff6b00] via-[#ff9500] to-[#ff6b00] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,107,0,0.5)]">
-                  KBT AVINYATHON 2026
-                </span>
-              </h2>
-              
-              {/* Subtitle */}
-              <p className="text-center text-white/70 mt-4 text-lg md:text-xl font-medium tracking-wide">
-                State-Level Industry Hackathon
-              </p>
-            </div>
-          </div>
+      {/* Event Title Banner - Clean and Centered */}
+      <div className="container mx-auto px-4 mb-8">
+        <div className="text-center">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-heading font-black text-gradient whitespace-nowrap">
+            KBT AVINYATHON 2026
+          </h2>
+          <p className="text-muted-foreground mt-3 text-lg md:text-xl font-medium tracking-wide">
+            State-Level Industry Hackathon
+          </p>
         </div>
       </div>
 
