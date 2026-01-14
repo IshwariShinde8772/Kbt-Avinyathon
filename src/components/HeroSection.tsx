@@ -9,17 +9,28 @@ const HeroSection = () => {
       {/* Event Title Banner - Animated with Background */}
       <div className="container mx-auto px-4 mb-10">
         <div className="flex justify-center">
-          <div className="relative inline-block">
-            {/* Animated background glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary rounded-2xl blur-xl opacity-40 animate-pulse" />
+          <div className="relative inline-block group">
+            {/* Animated background glow - pulsing */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-primary rounded-2xl blur-2xl opacity-50 animate-pulse-glow scale-110" />
+            
+            {/* Secondary glow layer for depth */}
+            <div className="absolute inset-0 bg-gradient-to-r from-secondary via-primary to-secondary rounded-2xl blur-xl opacity-30 animate-pulse-glow-delayed scale-105" />
             
             {/* Main title container */}
-            <div className="relative bg-gradient-to-r from-primary/90 via-secondary to-primary/90 rounded-2xl px-8 md:px-12 py-5 md:py-6 shadow-2xl overflow-hidden">
+            <div className="relative bg-gradient-to-r from-primary via-secondary to-primary rounded-2xl px-6 md:px-12 py-5 md:py-6 shadow-2xl overflow-hidden border border-white/20">
               {/* Shimmer animation overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
               
-              {/* Title text */}
-              <h2 className="relative text-4xl md:text-6xl lg:text-7xl font-heading font-black text-white tracking-wide whitespace-nowrap drop-shadow-lg">
+              {/* Moving gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-secondary/50 to-primary/50 animate-gradient-shift opacity-50" />
+              
+              {/* Sparkle effects */}
+              <div className="absolute top-2 left-8 w-2 h-2 bg-white rounded-full animate-sparkle opacity-70" />
+              <div className="absolute bottom-3 right-12 w-1.5 h-1.5 bg-white rounded-full animate-sparkle-delayed opacity-60" />
+              <div className="absolute top-4 right-20 w-1 h-1 bg-white rounded-full animate-sparkle opacity-50" />
+              
+              {/* Title text with text glow */}
+              <h2 className="relative text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-black text-white tracking-wide whitespace-nowrap animate-text-glow">
                 KBT AVINYATHON 2026
               </h2>
             </div>
