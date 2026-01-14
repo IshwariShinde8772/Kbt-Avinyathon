@@ -5,9 +5,9 @@ import hackathonHero from "@/assets/hackathon-hero.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="gradient-hero-bg py-8">
+    <section className="gradient-hero-bg py-6">
       {/* Event Title Banner - Animated with Background */}
-      <div className="container mx-auto px-4 mb-10">
+      <div className="container mx-auto px-4 mb-8">
         <div className="flex justify-center">
           <div className="relative inline-block group">
             {/* Animated background glow - pulsing */}
@@ -29,8 +29,8 @@ const HeroSection = () => {
               <div className="absolute bottom-3 right-12 w-1.5 h-1.5 bg-white rounded-full animate-sparkle-delayed opacity-60" />
               <div className="absolute top-4 right-20 w-1 h-1 bg-white rounded-full animate-sparkle opacity-50" />
               
-              {/* Title text with text glow */}
-              <h2 className="relative text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-black text-white tracking-wide whitespace-nowrap animate-text-glow">
+              {/* Title text with gradient color */}
+              <h2 className="relative text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-black tracking-wide whitespace-nowrap animate-text-glow bg-gradient-to-r from-yellow-200 via-white to-yellow-200 bg-clip-text text-transparent drop-shadow-lg">
                 KBT AVINYATHON 2026
               </h2>
             </div>
