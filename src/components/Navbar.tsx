@@ -57,12 +57,12 @@ const Navbar = () => {
     
     // Handle Home link - scroll to top
     if (path === "/") {
+      e.preventDefault();
       if (location.pathname === "/") {
-        e.preventDefault();
         window.scrollTo({ top: 0, behavior: "smooth" });
-        // Clear hash from URL
-        window.history.pushState(null, "", "/");
       }
+      // Use navigate to properly update React Router state and clear hash
+      navigate("/", { replace: true });
       return;
     }
     
@@ -74,8 +74,8 @@ const Navbar = () => {
         const element = document.getElementById(id);
         if (element) {
           scrollToElementWithOffset(element);
-          // Update URL hash without triggering navigation
-          window.history.pushState(null, "", path);
+          // Use navigate to properly update React Router state
+          navigate(path, { replace: true });
         }
       }
       // If not on home page, let the Link navigate (useEffect will handle scroll)
