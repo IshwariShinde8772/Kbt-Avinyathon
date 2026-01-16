@@ -164,6 +164,21 @@ const SubmitProblem = () => {
     }
   };
 
+  // Convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remove the data URL prefix (e.g., "data:image/png;base64,")
+        const base64 = result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const onSubmit = async (data: ProblemStatementForm) => {
     if (!paymentProofFile) {
       toast.error("Payment proof required", {
@@ -173,32 +188,16 @@ const SubmitProblem = () => {
     }
 
     setIsSubmitting(true);
+    setIsUploading(true);
     
     try {
-      // Upload payment proof to storage
-      setIsUploading(true);
-      const fileExt = paymentProofFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('payment-proofs')
-        .upload(fileName, paymentProofFile);
-
-      if (uploadError) {
-        throw new Error("Failed to upload payment proof");
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('payment-proofs')
-        .getPublicUrl(fileName);
-
-      setIsUploading(false);
+      // Convert file to base64 for secure server-side upload
+      const paymentProofBase64 = await fileToBase64(paymentProofFile);
 
       // Get Supabase URL from environment
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       
-      // Submit each problem statement
+      // Submit each problem statement (edge function handles file upload securely)
       for (const problem of data.problems) {
         const response = await fetch(`${supabaseUrl}/functions/v1/submit-problem`, {
           method: "POST",
@@ -217,7 +216,9 @@ const SubmitProblem = () => {
             targeted_audience: problem.targetedAudience,
             expected_outcome: problem.expectedOutcome,
             resources_provided: problem.resources || undefined,
-            payment_proof_url: publicUrl,
+            payment_proof_base64: paymentProofBase64,
+            payment_proof_filename: paymentProofFile.name,
+            payment_proof_type: paymentProofFile.type,
             honeypot: honeypotRef.current?.value || "",
           }),
         });
