@@ -70,7 +70,7 @@ const HeroSection = () => {
             </div>
 
             <p className="text-muted-foreground">
-              Connect with brilliant innovators ready to tackle your toughest problems.
+              Connect with brilliant innovators ready to tackle your problems.
               Get breakthrough solutions in just few hours.
             </p>
 
