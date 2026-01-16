@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 const problemSchema = z.object({
   domain: z.string().min(1, "Please select a domain"),
   problemTitle: z.string().min(5, "Problem title must be at least 5 characters").max(200),
-  problemDescription: z.string().min(50, "Problem description must be at least 50 characters").max(2000),
+  problemDescription: z.string().min(20, "Problem description must be at least 20 characters").max(2000),
   targetedAudience: z.string().min(10, "Targeted audience must be at least 10 characters").max(500),
   expectedOutcome: z.string().min(20, "Expected outcome must be at least 20 characters").max(1000),
   resources: z.string().max(1000).optional(),
