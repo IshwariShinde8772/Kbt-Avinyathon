@@ -16,7 +16,6 @@ export type Database = {
     Tables: {
       problem_statements: {
         Row: {
-          additional_notes: string | null
           company_name: string
           company_website: string | null
           contact_person: string
@@ -25,11 +24,8 @@ export type Database = {
           email: string
           expected_outcome: string | null
           id: string
-          internship_opportunity: boolean | null
-          mentorship_available: boolean | null
           payment_proof_url: string | null
           phone: string
-          prize_contribution: string | null
           problem_description: string
           problem_title: string
           resources_provided: string | null
@@ -38,7 +34,6 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          additional_notes?: string | null
           company_name: string
           company_website?: string | null
           contact_person: string
@@ -47,11 +42,8 @@ export type Database = {
           email: string
           expected_outcome?: string | null
           id?: string
-          internship_opportunity?: boolean | null
-          mentorship_available?: boolean | null
           payment_proof_url?: string | null
           phone: string
-          prize_contribution?: string | null
           problem_description: string
           problem_title: string
           resources_provided?: string | null
@@ -60,7 +52,6 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          additional_notes?: string | null
           company_name?: string
           company_website?: string | null
           contact_person?: string
@@ -69,11 +60,8 @@ export type Database = {
           email?: string
           expected_outcome?: string | null
           id?: string
-          internship_opportunity?: boolean | null
-          mentorship_available?: boolean | null
           payment_proof_url?: string | null
           phone?: string
-          prize_contribution?: string | null
           problem_description?: string
           problem_title?: string
           resources_provided?: string | null
@@ -139,8 +127,6 @@ export type Database = {
           domain: string | null
           expected_outcome: string | null
           id: string | null
-          internship_opportunity: boolean | null
-          mentorship_available: boolean | null
           problem_description: string | null
           problem_title: string | null
           resources_provided: string | null
@@ -152,8 +138,6 @@ export type Database = {
           domain?: string | null
           expected_outcome?: string | null
           id?: string | null
-          internship_opportunity?: boolean | null
-          mentorship_available?: boolean | null
           problem_description?: string | null
           problem_title?: string | null
           resources_provided?: string | null
@@ -165,8 +149,6 @@ export type Database = {
           domain?: string | null
           expected_outcome?: string | null
           id?: string | null
-          internship_opportunity?: boolean | null
-          mentorship_available?: boolean | null
           problem_description?: string | null
           problem_title?: string | null
           resources_provided?: string | null
