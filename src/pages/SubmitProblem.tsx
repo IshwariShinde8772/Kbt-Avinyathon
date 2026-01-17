@@ -514,14 +514,14 @@ const SubmitProblem = () => {
                         Payment Summary
                       </h3>
                       <p className="text-muted-foreground text-sm mb-3">
-                        Registration Fee: ₹5,000 per problem statement
+                        Registration Fee: <span className="font-semibold text-foreground">₹5,000 (Flat Fee)</span> for one or multiple problem statements
                       </p>
                       <div className="bg-background rounded-lg p-4 border border-border">
                         <p className="text-2xl font-heading font-bold text-primary text-center">
-                          Total: ₹{(fields.length * 5000).toLocaleString()}
+                          Total: ₹5,000
                         </p>
                         <p className="text-muted-foreground text-sm text-center mt-1">
-                          ({fields.length} problem statement{fields.length > 1 ? 's' : ''})
+                          ({fields.length} problem statement{fields.length > 1 ? 's' : ''} - Same flat fee)
                         </p>
                       </div>
                     </div>
