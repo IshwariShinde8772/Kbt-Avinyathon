@@ -50,7 +50,7 @@ const fundingInfo = [
   },
   {
     title: "Prize Funding",
-    description: "Recommended ₹10,000 – ₹50,000 per problem statement"
+    description: "₹10,000 – ₹50,000 for top three winners"
   },
   {
     title: "Transparent Distribution",
