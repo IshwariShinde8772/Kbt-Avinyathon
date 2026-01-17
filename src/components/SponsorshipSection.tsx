@@ -46,7 +46,7 @@ const sponsorshipTiers = [
 const fundingInfo = [
   {
     title: "Industry Registration Fee",
-    description: "₹5,000 (non-refundable) for industries submitting problem statements"
+    description: "₹5,000 (non-refundable) flat fee for industries submitting one or multiple problem statements"
   },
   {
     title: "Prize Funding",
