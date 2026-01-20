@@ -149,15 +149,29 @@ function base64UrlEncode(data: Uint8Array): string {
 }
 
 async function importPrivateKey(pem: string): Promise<CryptoKey> {
-  // Handle escaped newlines from environment variable
-  const pemContents = pem
-    .replace(/\\n/g, "\n")
-    .replace(/-----BEGIN PRIVATE KEY-----/, "")
-    .replace(/-----END PRIVATE KEY-----/, "")
-    .replace(/-----BEGIN RSA PRIVATE KEY-----/, "")
-    .replace(/-----END RSA PRIVATE KEY-----/, "")
-    .replace(/\s/g, "");
+  // Handle various formats of the private key
+  let pemContents = pem;
+  
+  // First, handle escaped newlines (from JSON or env vars)
+  pemContents = pemContents.replace(/\\n/g, "\n");
+  
+  // Remove the PEM headers and footers
+  pemContents = pemContents
+    .replace(/-----BEGIN PRIVATE KEY-----/g, "")
+    .replace(/-----END PRIVATE KEY-----/g, "")
+    .replace(/-----BEGIN RSA PRIVATE KEY-----/g, "")
+    .replace(/-----END RSA PRIVATE KEY-----/g, "");
+  
+  // Remove all whitespace (newlines, spaces, tabs, carriage returns)
+  pemContents = pemContents.replace(/[\s\r\n]+/g, "");
+  
+  // Validate that we have valid base64 content
+  if (!/^[A-Za-z0-9+/]+=*$/.test(pemContents)) {
+    throw new Error("Invalid base64 characters in private key");
+  }
 
+  console.log("Private key length after cleanup:", pemContents.length);
+  
   const binaryDer = Uint8Array.from(atob(pemContents), (c) => c.charCodeAt(0));
 
   return await crypto.subtle.importKey(
