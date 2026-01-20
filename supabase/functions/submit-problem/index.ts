@@ -15,6 +15,160 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+// Google Sheets API helper
+async function appendToGoogleSheet(data: Record<string, unknown>, sheetType: 'problem' | 'sponsorship') {
+  const serviceAccountEmail = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_EMAIL");
+  const privateKey = Deno.env.get("GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY");
+  const sheetId = Deno.env.get("GOOGLE_SHEET_ID");
+
+  if (!serviceAccountEmail || !privateKey || !sheetId) {
+    console.log("Google Sheets credentials not configured, skipping sheet append");
+    return;
+  }
+
+  try {
+    // Create JWT for Google API authentication
+    const jwt = await createGoogleJWT(serviceAccountEmail, privateKey);
+    
+    // Get access token
+    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        assertion: jwt,
+      }),
+    });
+
+    if (!tokenResponse.ok) {
+      console.error("Failed to get Google access token:", await tokenResponse.text());
+      return;
+    }
+
+    const { access_token } = await tokenResponse.json();
+
+    // Prepare row data based on type
+    const timestamp = new Date().toISOString();
+    let rowData: string[];
+    let range: string;
+
+    if (sheetType === 'problem') {
+      rowData = [
+        timestamp,
+        String(data.company_name || ''),
+        String(data.contact_person || ''),
+        String(data.email || ''),
+        String(data.phone || ''),
+        String(data.company_website || ''),
+        String(data.problem_title || ''),
+        String(data.problem_description || ''),
+        String(data.domain || ''),
+        String(data.targeted_audience || ''),
+        String(data.expected_outcome || ''),
+        String(data.resources_provided || ''),
+        'pending'
+      ];
+      range = "Problem Statements!A:M";
+    } else {
+      rowData = [
+        timestamp,
+        String(data.company_name || ''),
+        String(data.contact_person || ''),
+        String(data.email || ''),
+        String(data.phone || ''),
+        String(data.company_website || ''),
+        String(data.sponsorship_type || ''),
+        String(data.sponsorship_amount || ''),
+        String(data.additional_notes || ''),
+        'pending'
+      ];
+      range = "Sponsorships!A:J";
+    }
+
+    // Append to Google Sheet
+    const appendResponse = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          values: [rowData],
+        }),
+      }
+    );
+
+    if (!appendResponse.ok) {
+      console.error("Failed to append to Google Sheet:", await appendResponse.text());
+    } else {
+      console.log("Successfully appended to Google Sheet");
+    }
+  } catch (error) {
+    console.error("Google Sheets error:", error);
+  }
+}
+
+// Create a JWT for Google Service Account authentication
+async function createGoogleJWT(email: string, privateKeyPem: string): Promise<string> {
+  const header = {
+    alg: "RS256",
+    typ: "JWT",
+  };
+
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    iss: email,
+    scope: "https://www.googleapis.com/auth/spreadsheets",
+    aud: "https://oauth2.googleapis.com/token",
+    iat: now,
+    exp: now + 3600,
+  };
+
+  const encoder = new TextEncoder();
+  const headerB64 = base64UrlEncode(encoder.encode(JSON.stringify(header)));
+  const payloadB64 = base64UrlEncode(encoder.encode(JSON.stringify(payload)));
+  const unsignedToken = `${headerB64}.${payloadB64}`;
+
+  // Import the private key and sign
+  const key = await importPrivateKey(privateKeyPem);
+  const signature = await crypto.subtle.sign(
+    { name: "RSASSA-PKCS1-v1_5" },
+    key,
+    encoder.encode(unsignedToken)
+  );
+
+  const signatureB64 = base64UrlEncode(new Uint8Array(signature));
+  return `${unsignedToken}.${signatureB64}`;
+}
+
+function base64UrlEncode(data: Uint8Array): string {
+  const base64 = btoa(String.fromCharCode(...data));
+  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+async function importPrivateKey(pem: string): Promise<CryptoKey> {
+  // Handle escaped newlines from environment variable
+  const pemContents = pem
+    .replace(/\\n/g, "\n")
+    .replace(/-----BEGIN PRIVATE KEY-----/, "")
+    .replace(/-----END PRIVATE KEY-----/, "")
+    .replace(/-----BEGIN RSA PRIVATE KEY-----/, "")
+    .replace(/-----END RSA PRIVATE KEY-----/, "")
+    .replace(/\s/g, "");
+
+  const binaryDer = Uint8Array.from(atob(pemContents), (c) => c.charCodeAt(0));
+
+  return await crypto.subtle.importKey(
+    "pkcs8",
+    binaryDer,
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -84,7 +238,7 @@ serve(async (req) => {
     }
 
     if (data.type === "sponsorship") {
-      const { error } = await supabase.from("sponsorships").insert({
+      const insertData = {
         company_name: data.company_name,
         contact_person: data.contact_person,
         email: data.email,
@@ -95,12 +249,18 @@ serve(async (req) => {
         additional_notes: data.additional_notes || null,
         payment_proof_url: paymentProofUrl,
         status: "pending",
-      });
+      };
+      
+      const { error } = await supabase.from("sponsorships").insert(insertData);
       if (error) return new Response(JSON.stringify({ error: "Failed to submit" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      
+      // Append to Google Sheet (non-blocking)
+      appendToGoogleSheet(insertData, 'sponsorship');
+      
       return new Response(JSON.stringify({ success: true }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { error } = await supabase.from("problem_statements").insert({
+    const insertData = {
       company_name: data.company_name,
       contact_person: data.contact_person,
       email: data.email,
@@ -114,8 +274,14 @@ serve(async (req) => {
       resources_provided: data.resources_provided || null,
       payment_proof_url: paymentProofUrl,
       status: "pending",
-    });
+    };
+    
+    const { error } = await supabase.from("problem_statements").insert(insertData);
     if (error) return new Response(JSON.stringify({ error: "Failed to submit" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    
+    // Append to Google Sheet (non-blocking)
+    appendToGoogleSheet(insertData, 'problem');
+    
     return new Response(JSON.stringify({ success: true }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Edge function error:", error);
