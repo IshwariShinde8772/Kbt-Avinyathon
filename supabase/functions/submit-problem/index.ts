@@ -36,7 +36,15 @@ serve(async (req) => {
       return new Response(JSON.stringify({ success: true }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    // Primary Lovable Cloud database
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    
+    // External Supabase database (optional - will save to both if configured)
+    const externalSupabaseUrl = Deno.env.get("EXTERNAL_SUPABASE_URL");
+    const externalSupabaseKey = Deno.env.get("EXTERNAL_SUPABASE_SERVICE_ROLE_KEY");
+    const externalSupabase = externalSupabaseUrl && externalSupabaseKey 
+      ? createClient(externalSupabaseUrl, externalSupabaseKey)
+      : null;
 
     // Handle file upload if provided
     let paymentProofUrl: string | null = null;
@@ -103,6 +111,17 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "Failed to submit" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
       
+      // Also save to external Supabase if configured
+      if (externalSupabase) {
+        const { error: extError } = await externalSupabase.from("sponsorships").insert(insertData);
+        if (extError) {
+          console.error("External database insert error:", extError);
+          // Don't fail the request, primary save was successful
+        } else {
+          console.log("Sponsorship also saved to external database");
+        }
+      }
+      
       console.log("Sponsorship saved to database successfully");
       return new Response(JSON.stringify({ success: true }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
@@ -127,6 +146,17 @@ serve(async (req) => {
     if (error) {
       console.error("Database insert error:", error);
       return new Response(JSON.stringify({ error: "Failed to submit" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    
+    // Also save to external Supabase if configured
+    if (externalSupabase) {
+      const { error: extError } = await externalSupabase.from("problem_statements").insert(insertData);
+      if (extError) {
+        console.error("External database insert error:", extError);
+        // Don't fail the request, primary save was successful
+      } else {
+        console.log("Problem statement also saved to external database");
+      }
     }
     
     console.log("Problem statement saved to database successfully");
