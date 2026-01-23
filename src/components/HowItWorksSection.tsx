@@ -66,7 +66,7 @@ const HowItWorksSection = () => {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-heading font-black mb-4 text-foreground">
-            KBT-Hackathon 2026 Process Flow
+            KBT-Avinyathon 2026 Process Flow
           </h2>
           <p className="text-muted-foreground text-lg">
             From problem statement submission to winner announcement
