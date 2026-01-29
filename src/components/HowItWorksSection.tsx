@@ -29,13 +29,13 @@ const steps = [
     number: 5,
     title: "Solution Submission",
     description: "Student teams develop and submit their innovative solutions for the challenges.",
-    date: "25 MAR 2026",
+    date: "30 MAR 2026",
   },
   {
     number: 6,
     title: "Screening of Solutions",
     description: "Expert panel screens and evaluates the best solutions from all submissions.",
-    date: "30 MAR 2026",
+    date: "2 APR 2026",
   },
   {
     number: 7,
@@ -66,7 +66,7 @@ const HowItWorksSection = () => {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-heading font-black mb-4 text-foreground">
-            KBT-Avinyathon 2026 Process Flow
+            KBT-AVINYATHON 2026 Process Flow
           </h2>
           <p className="text-muted-foreground text-lg">
             From problem statement submission to winner announcement
