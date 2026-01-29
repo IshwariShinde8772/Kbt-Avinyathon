@@ -8,7 +8,7 @@ const sponsorshipTiers = [
     icon: Star,
     color: "text-yellow-500",
     benefits: [
-      "Prominent mention on the Hackathon website",
+      "Prominent mention on the KBT-AVINYATHON website",
       "Logo display on banners, standees & all promotional material",
       "Appreciation certificate & Acknowledgment during ceremonies",
       "Opportunity to interact with shortlisted teams",
@@ -23,7 +23,7 @@ const sponsorshipTiers = [
     icon: Award,
     color: "text-primary",
     benefits: [
-      "Prominent mention on the Hackathon website",
+      "Prominent mention on the KBT-AVINYATHON website",
       "Appreciation certificate & stage acknowledgment",
       "Company logo on banners & publicity material",
       "Exclusive Mention in Newsletter"
