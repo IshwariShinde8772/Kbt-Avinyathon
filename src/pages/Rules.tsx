@@ -28,7 +28,7 @@ const rules = [
   },
   {
     number: 2,
-    title: "Feasibility Within Hackathon Duration",
+    title: "Feasibility Within KBT-AVINYATHON Duration",
     icon: Clock,
     content: [
       "The solution should be realistically achievable within 15-20 days.",
@@ -152,7 +152,7 @@ const Rules = () => {
               Rules & Regulations
             </h1>
             <p className="text-muted-foreground text-base">
-              For Submitting Industry Problem Statements (KBT–Hackathon 2026)
+              For Submitting Industry Problem Statements (KBT-AVINYATHON 2026)
             </p>
           </div>
         </section>
