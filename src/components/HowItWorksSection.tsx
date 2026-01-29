@@ -74,82 +74,102 @@ const HowItWorksSection = () => {
         </div>
 
         {/* Process Flow Timeline */}
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-4">
-            {steps.slice(0, 4).map((step, index) => (
-              <div key={index} className="relative">
-                <div
-                  className={`bg-background rounded-2xl p-5 shadow-lg border ${
-                    index === 3 ? "border-primary border-2" : "border-border"
-                  } hover:shadow-xl transition-all duration-300 h-full`}
-                >
-                  <div className="step-badge mb-4 mx-auto text-sm">
-                    {step.number}
-                  </div>
-                  <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
-                    {step.title}
-                  </h3>
-                  <p className="text-muted-foreground text-center text-xs mb-3">
-                    {step.description}
-                  </p>
-                  <div className="text-center">
-                    <span className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
-                      {step.date}
-                    </span>
-                  </div>
-                </div>
-                {index < 3 && (
-                  <div className="hidden md:flex absolute top-1/2 -right-2 transform -translate-y-1/2 z-10">
-                    <ArrowRight className="w-4 h-4 text-primary" />
-                  </div>
-                )}
-              </div>
-            ))}
+<div className="max-w-5xl mx-auto">
+  <div className="grid md:grid-cols-4 gap-4">
+    {steps.slice(0, 4).map((step, index) => (
+      <div key={index} className="relative">
+        <div
+          className={`bg-background rounded-2xl p-5 shadow-lg border ${
+            index === 3 ? "border-primary border-2" : "border-border"
+          } hover:shadow-xl transition-all duration-300 h-full`}
+        >
+          <div className="step-badge mb-4 mx-auto text-sm">
+            {step.number}
           </div>
-
-          {/* Arrow down for mobile, connecting line for desktop */}
-          <div className="flex justify-center my-6">
-            <div className="w-0.5 h-8 bg-primary md:hidden"></div>
-            <ArrowRight className="hidden md:block w-6 h-6 text-primary rotate-90" />
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-4">
-            {steps.slice(4, 8).map((step, index) => (
-              <div key={index} className="relative">
-                <div
-                  className={`bg-background rounded-2xl p-5 shadow-lg border ${
-                    index === 3 ? "border-green-500 border-2" : "border-border"
-                  } hover:shadow-xl transition-all duration-300 h-full`}
-                >
-                  <div className={`step-badge mb-4 mx-auto text-sm ${index === 3 ? "!bg-green-500" : ""}`}>
-                    {step.number}
-                  </div>
-                  <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
-                    {step.title}
-                  </h3>
-                  <p className="text-muted-foreground text-center text-xs mb-3">
-                    {step.description}
-                  </p>
-                  <div className="text-center">
-                    <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${
-                      index === 3 ? "bg-green-500/10 text-green-600" : "bg-primary/10 text-primary"
-                    }`}>
-                      {step.date}
-                    </span>
-                  </div>
-                </div>
-                {index < 3 && (
-                  <div className="hidden md:flex absolute top-1/2 -right-2 transform -translate-y-1/2 z-10">
-                    <ArrowRight className="w-4 h-4 text-primary" />
-                  </div>
-                )}
-              </div>
-            ))}
+          <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
+            {step.title}
+          </h3>
+          <p className="text-muted-foreground text-center text-xs mb-3">
+            {step.description}
+          </p>
+          <div className="text-center">
+            <span className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
+              {step.date}
+            </span>
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
 
+        {/* Centered & Bold Arrow */}
+        {index < 3 && (
+          <div className="hidden md:flex absolute top-1/2 right-[-20px] -translate-y-1/2 z-20 items-center justify-center">
+            <ArrowRight
+              className="w-6 h-6 text-primary"
+              strokeWidth={2.5}
+            />
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+
+  {/* Connector between rows */}
+  <div className="flex justify-center my-6">
+    <div className="w-1 h-10 bg-primary md:hidden rounded-full"></div>
+    <ArrowRight
+      className="hidden md:block w-8 h-8 text-primary rotate-90"
+      strokeWidth={2.5}
+    />
+  </div>
+
+  <div className="grid md:grid-cols-4 gap-4">
+    {steps.slice(4, 8).map((step, index) => (
+      <div key={index} className="relative">
+        <div
+          className={`bg-background rounded-2xl p-5 shadow-lg border ${
+            index === 3 ? "border-green-500 border-2" : "border-border"
+          } hover:shadow-xl transition-all duration-300 h-full`}
+        >
+          <div
+            className={`step-badge mb-4 mx-auto text-sm ${
+              index === 3 ? "!bg-green-500" : ""
+            }`}
+          >
+            {step.number}
+          </div>
+          <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
+            {step.title}
+          </h3>
+          <p className="text-muted-foreground text-center text-xs mb-3">
+            {step.description}
+          </p>
+          <div className="text-center">
+            <span
+              className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${
+                index === 3
+                  ? "bg-green-500/10 text-green-600"
+                  : "bg-primary/10 text-primary"
+              }`}
+            >
+              {step.date}
+            </span>
+          </div>
+        </div>
+
+        {/* Centered & Bold Arrow */}
+        {index < 3 && (
+          <div className="hidden md:flex absolute top-1/2 right-[-20px] -translate-y-1/2 z-20 items-center justify-center">
+            <ArrowRight
+              className="w-6 h-6 text-primary"
+              strokeWidth={2.5}
+            />
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+  </div>
+</section>
+);
+};
+      
 export default HowItWorksSection;
