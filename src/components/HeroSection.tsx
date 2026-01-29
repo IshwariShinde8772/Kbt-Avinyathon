@@ -55,7 +55,7 @@ const HeroSection = () => {
 
             <p className="text-foreground text-lg">
               <strong>KBTCOE</strong> is organizing a{" "}
-              <strong>State-Level Hackathon in March 2026</strong> designed to bring
+              <strong>State-Level KBT-AVINYATHON in April 2026</strong> designed to bring
               together innovative young minds to solve real-world industry problems.
             </p>
 
