@@ -29,7 +29,7 @@ const CTASection = () => {
             Ready to Find Innovative Solutions?
           </h2>
           <p className="text-muted-foreground text-lg mb-8">
-            Join leading companies leveraging hackathons to drive innovation and solve complex challenges.
+            Join leading companies leveraging KBT-AVINYATHON to drive innovation and solve complex challenges.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
