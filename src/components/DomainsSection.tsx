@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const domains = [
-  "Process Optimization",
-  "Automation & Productivity",
-  "Quality Improvement",
-  "Data Analytics & AI/ML",
-  "Safety & Monitoring Systems",
-  "Sustainable & Green Solutions",
-  "Digital Transformation",
+  "Software",
+  "Hardware",
+  "Automation",
+  "Graphics",
+  "Design",
+  "Maintenance",
+  "Other",
 ];
 
 const DomainsSection = () => {
