@@ -1,4 +1,4 @@
-import { Rocket, ArrowRight } from "lucide-react";
+import { Rocket, ArrowRight, ArrowDown } from "lucide-react";
 
 const steps = [
   {
@@ -52,6 +52,9 @@ const steps = [
 ];
 
 const HowItWorksSection = () => {
+  // Get bottom row steps in reverse order (8, 7, 6, 5)
+  const bottomRowSteps = [...steps.slice(4, 8)].reverse();
+
   return (
     <section id="process" className="py-12 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -74,103 +77,112 @@ const HowItWorksSection = () => {
         </div>
 
         {/* Process Flow Timeline */}
-<div className="max-w-5xl mx-auto">
-  <div className="grid md:grid-cols-4 gap-4">
-    {steps.slice(0, 4).map((step, index) => (
-      <div key={index} className="relative">
-        <div
-          className={`bg-background rounded-2xl p-5 shadow-lg border ${
-            index === 3 ? "border-primary border-2" : "border-border"
-          } hover:shadow-xl transition-all duration-300 h-full`}
-        >
-          <div className="step-badge mb-4 mx-auto text-sm">
-            {step.number}
-          </div>
-          <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
-            {step.title}
-          </h3>
-          <p className="text-muted-foreground text-center text-xs mb-3">
-            {step.description}
-          </p>
-          <div className="text-center">
-            <span className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
-              {step.date}
-            </span>
-          </div>
-        </div>
+        <div className="max-w-5xl mx-auto">
+          {/* Top Row: Steps 1-4 */}
+          <div className="grid md:grid-cols-4 gap-4">
+            {steps.slice(0, 4).map((step, index) => (
+              <div key={index} className="relative">
+                <div
+                  className={`bg-background rounded-2xl p-5 shadow-lg border ${
+                    index === 3 ? "border-primary border-2" : "border-border"
+                  } hover:shadow-xl transition-all duration-300 h-full`}
+                >
+                  <div className="step-badge mb-4 mx-auto text-sm">
+                    {step.number}
+                  </div>
+                  <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="text-muted-foreground text-center text-xs mb-3">
+                    {step.description}
+                  </p>
+                  <div className="text-center">
+                    <span className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
+                      {step.date}
+                    </span>
+                  </div>
+                </div>
 
-        {/* Centered & Bold Arrow */}
-        {index < 3 && (
-          <div className="hidden md:flex absolute top-1/2 right-[-20px] -translate-y-1/2 z-20 items-center justify-center">
-            <ArrowRight
-              className="w-6 h-6 text-primary"
-              strokeWidth={2.5}
-            />
+                {/* Horizontal Arrow between cards 1-2, 2-3, 3-4 */}
+                {index < 3 && (
+                  <div className="hidden md:flex absolute top-1/2 -right-4 -translate-y-1/2 z-20 items-center justify-center w-8">
+                    <ArrowRight
+                      className="w-6 h-6 text-primary"
+                      strokeWidth={3}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-        )}
-      </div>
-    ))}
-  </div>
 
-  {/* Connector between rows */}
-  <div className="flex justify-center my-6">
-    <div className="w-1 h-10 bg-primary md:hidden rounded-full"></div>
-    <ArrowRight
-      className="hidden md:block w-8 h-8 text-primary rotate-90"
-      strokeWidth={2.5}
-    />
-  </div>
+          {/* Connector Arrow: from step 4 down to step 5 (on the right side) */}
+          <div className="hidden md:flex justify-end pr-[calc(12.5%-8px)] my-4">
+            <div className="flex flex-col items-center">
+              <div className="w-1 h-6 bg-primary rounded-full"></div>
+              <ArrowDown className="w-6 h-6 text-primary -mt-1" strokeWidth={3} />
+            </div>
+          </div>
 
-  <div className="grid md:grid-cols-4 gap-4">
-    {steps.slice(4, 8).map((step, index) => (
-      <div key={index} className="relative">
-        <div
-          className={`bg-background rounded-2xl p-5 shadow-lg border ${
-            index === 3 ? "border-green-500 border-2" : "border-border"
-          } hover:shadow-xl transition-all duration-300 h-full`}
-        >
-          <div
-            className={`step-badge mb-4 mx-auto text-sm ${
-              index === 3 ? "!bg-green-500" : ""
-            }`}
-          >
-            {step.number}
+          {/* Mobile connector */}
+          <div className="flex justify-center my-6 md:hidden">
+            <div className="flex flex-col items-center">
+              <div className="w-1 h-6 bg-primary rounded-full"></div>
+              <ArrowDown className="w-6 h-6 text-primary -mt-1" strokeWidth={3} />
+            </div>
           </div>
-          <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
-            {step.title}
-          </h3>
-          <p className="text-muted-foreground text-center text-xs mb-3">
-            {step.description}
-          </p>
-          <div className="text-center">
-            <span
-              className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${
-                index === 3
-                  ? "bg-green-500/10 text-green-600"
-                  : "bg-primary/10 text-primary"
-              }`}
-            >
-              {step.date}
-            </span>
-          </div>
-        </div>
 
-        {/* Centered & Bold Arrow */}
-        {index < 3 && (
-          <div className="hidden md:flex absolute top-1/2 right-[-20px] -translate-y-1/2 z-20 items-center justify-center">
-            <ArrowRight
-              className="w-6 h-6 text-primary"
-              strokeWidth={2.5}
-            />
+          {/* Bottom Row: Steps 8, 7, 6, 5 (reversed display, so flow is 5→6→7→8 from right to left) */}
+          <div className="grid md:grid-cols-4 gap-4">
+            {bottomRowSteps.map((step, index) => (
+              <div key={index} className="relative">
+                <div
+                  className={`bg-background rounded-2xl p-5 shadow-lg border ${
+                    step.number === 8 ? "border-green-500 border-2" : "border-border"
+                  } hover:shadow-xl transition-all duration-300 h-full`}
+                >
+                  <div
+                    className={`step-badge mb-4 mx-auto text-sm ${
+                      step.number === 8 ? "!bg-green-500" : ""
+                    }`}
+                  >
+                    {step.number}
+                  </div>
+                  <h3 className="text-base font-heading font-bold text-center mb-2 text-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="text-muted-foreground text-center text-xs mb-3">
+                    {step.description}
+                  </p>
+                  <div className="text-center">
+                    <span
+                      className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${
+                        step.number === 8
+                          ? "bg-green-500/10 text-green-600"
+                          : "bg-primary/10 text-primary"
+                      }`}
+                    >
+                      {step.date}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Arrows pointing LEFT (from 5→6→7→8, visually right to left) */}
+                {index < 3 && (
+                  <div className="hidden md:flex absolute top-1/2 -left-4 -translate-y-1/2 z-20 items-center justify-center w-8">
+                    <ArrowRight
+                      className="w-6 h-6 text-primary rotate-180"
+                      strokeWidth={3}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-        )}
-      </div>
-    ))}
-  </div>
         </div>
       </div>
     </section>
   );
 };
-      
+
 export default HowItWorksSection;

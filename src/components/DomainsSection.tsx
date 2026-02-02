@@ -8,6 +8,7 @@ const domains = [
   "Graphics",
   "Design",
   "Maintenance",
+  "Banking/Sales/Marketing",
   "Other",
 ];
 

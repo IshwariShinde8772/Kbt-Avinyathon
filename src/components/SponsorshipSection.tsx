@@ -60,12 +60,12 @@ const fundingInfo = [
 
 const contactPersons = [
   {
-    name: "Mr. Ajit Shiralkar",
-    phone: "9096394159"
-  },
-  {
     name: "Mrs. Tejaswini Deshmukh",
     phone: "9403498919"
+  },
+  {
+    name: "Dr S. B. Sonawane",
+    phone: "91670 04398"
   },
   {
     name: "Mr. Pritesh Aher",
