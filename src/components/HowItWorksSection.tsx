@@ -167,9 +167,10 @@ const HowItWorksSection = () => {
       </div>
     ))}
   </div>
-  </div>
-</section>
-);
+        </div>
+      </div>
+    </section>
+  );
 };
       
 export default HowItWorksSection;
