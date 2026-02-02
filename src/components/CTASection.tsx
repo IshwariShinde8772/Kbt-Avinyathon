@@ -12,7 +12,7 @@ import { Phone, User } from "lucide-react";
 
 const contacts = [
   { name: "Mrs. Tejaswini Deshmukh", phone: "9403498919" },
-  { name: "Dr S. B. Sonawane", phone: "91670 04398" },
+  { name: "Dr S. B. Sonawane", phone: "9167004398" },
   { name: "Mr. Pritesh Aher", phone: "7588833992" },
 ];
 

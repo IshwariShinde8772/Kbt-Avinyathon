@@ -65,7 +65,7 @@ const contactPersons = [
   },
   {
     name: "Dr S. B. Sonawane",
-    phone: "91670 04398"
+    phone: "9167004398"
   },
   {
     name: "Mr. Pritesh Aher",

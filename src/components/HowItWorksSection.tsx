@@ -167,8 +167,8 @@ const HowItWorksSection = () => {
                   </div>
                 </div>
 
-                {/* Arrows pointing LEFT (from 5→6→7→8, visually right to left) */}
-                {index < 3 && (
+                {/* Arrows pointing LEFT between cards (5←6←7←8) - show between 8-7, 7-6, 6-5 */}
+                {index > 0 && (
                   <div className="hidden md:flex absolute top-1/2 -left-4 -translate-y-1/2 z-20 items-center justify-center w-8">
                     <ArrowRight
                       className="w-6 h-6 text-primary rotate-180"
