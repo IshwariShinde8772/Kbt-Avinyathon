@@ -48,6 +48,9 @@ serve(async (req) => {
 
     // Handle file upload if provided
     let paymentProofUrl: string | null = null;
+    let fileData: Uint8Array | null = null;
+    let fileName: string | null = null;
+    
     if (data.payment_proof_base64 && data.payment_proof_filename && data.payment_proof_type) {
       // Validate file type
       if (!ALLOWED_MIME_TYPES.includes(data.payment_proof_type)) {
@@ -58,7 +61,7 @@ serve(async (req) => {
       }
 
       // Decode base64 and validate size
-      const fileData = decode(data.payment_proof_base64);
+      fileData = decode(data.payment_proof_base64);
       if (fileData.length > MAX_FILE_SIZE) {
         return new Response(JSON.stringify({ error: "File too large. Maximum size is 5MB" }), { 
           status: 400, 
@@ -69,9 +72,9 @@ serve(async (req) => {
       // Generate secure filename
       const fileExt = data.payment_proof_filename.split('.').pop()?.toLowerCase() || 'bin';
       const safeExt = ['jpg', 'jpeg', 'png', 'webp', 'pdf'].includes(fileExt) ? fileExt : 'bin';
-      const fileName = `${Date.now()}-${crypto.randomUUID()}.${safeExt}`;
+      fileName = `${Date.now()}-${crypto.randomUUID()}.${safeExt}`;
 
-      // Upload to private bucket using service role
+      // Upload to primary Lovable Cloud bucket using service role
       const { error: uploadError } = await supabase.storage
         .from('payment-proofs')
         .upload(fileName, fileData, {
@@ -80,11 +83,28 @@ serve(async (req) => {
         });
 
       if (uploadError) {
-        console.error("Storage upload error:", uploadError);
+        console.error("Primary storage upload error:", uploadError);
         return new Response(JSON.stringify({ error: "Failed to upload payment proof" }), { 
           status: 500, 
           headers: { ...corsHeaders, "Content-Type": "application/json" } 
         });
+      }
+
+      // Also upload to external Supabase storage if configured
+      if (externalSupabase && fileData && fileName) {
+        const { error: extUploadError } = await externalSupabase.storage
+          .from('payment-proofs')
+          .upload(fileName, fileData, {
+            contentType: data.payment_proof_type,
+            upsert: false,
+          });
+
+        if (extUploadError) {
+          console.error("External storage upload error:", extUploadError);
+          // Don't fail the request, primary upload was successful
+        } else {
+          console.log("Payment proof also uploaded to external storage");
+        }
       }
 
       // Store the path (not a public URL - admins will use signed URLs to access)
@@ -102,6 +122,7 @@ serve(async (req) => {
         sponsorship_amount: data.sponsorship_amount || null,
         additional_notes: data.additional_notes || null,
         payment_proof_url: paymentProofUrl,
+        transaction_id: data.transaction_id || null,
         status: "pending",
       };
       
@@ -139,6 +160,7 @@ serve(async (req) => {
       expected_outcome: data.expected_outcome,
       resources_provided: data.resources_provided || null,
       payment_proof_url: paymentProofUrl,
+      transaction_id: data.transaction_id || null,
       status: "pending",
     };
     

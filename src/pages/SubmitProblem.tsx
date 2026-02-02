@@ -31,6 +31,7 @@ const problemStatementSchema = z.object({
   phone: z.string().min(10, "Please enter a valid phone number").max(15),
   companyWebsite: z.string().url("Please enter a valid URL").max(255).optional().or(z.literal("")),
   problems: z.array(problemSchema).min(1, "At least one problem statement is required"),
+  transactionId: z.string().min(5, "Please enter a valid transaction ID").max(100),
 });
 
 type ProblemStatementForm = z.infer<typeof problemStatementSchema>;
@@ -82,7 +83,8 @@ const SubmitProblem = () => {
           expectedOutcome: "",
           resources: "",
         }
-      ]
+      ],
+      transactionId: "",
     }
   });
 
@@ -130,6 +132,9 @@ const SubmitProblem = () => {
       return result;
     } else if (step === 2) {
       const result = await trigger(["problems"]);
+      return result;
+    } else if (step === 3) {
+      const result = await trigger(["transactionId"]);
       return result;
     }
     return true;
@@ -188,6 +193,13 @@ const SubmitProblem = () => {
       return;
     }
 
+    if (!data.transactionId || data.transactionId.trim().length < 5) {
+      toast.error("Transaction ID required", {
+        description: "Please enter a valid transaction ID.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     setIsUploading(true);
     
@@ -217,6 +229,7 @@ const SubmitProblem = () => {
             targeted_audience: problem.targetedAudience,
             expected_outcome: problem.expectedOutcome,
             resources_provided: problem.resources || undefined,
+            transaction_id: data.transactionId,
             payment_proof_base64: paymentProofBase64,
             payment_proof_filename: paymentProofFile.name,
             payment_proof_type: paymentProofFile.type,
@@ -515,14 +528,14 @@ const SubmitProblem = () => {
                         Payment Summary
                       </h3>
                       <p className="text-muted-foreground text-sm mb-3">
-                        Registration Fee: <span className="font-semibold text-foreground">₹5,000 (Flat Fee)</span> for one or multiple problem statements
+                        Registration Fee: <span className="font-semibold text-foreground">₹5,000</span> for one or multiple problem statements
                       </p>
                       <div className="bg-background rounded-lg p-4 border border-border">
                         <p className="text-2xl font-heading font-bold text-primary text-center">
                           Total: ₹5,000
                         </p>
                         <p className="text-muted-foreground text-sm text-center mt-1">
-                          ({fields.length} problem statement{fields.length > 1 ? 's' : ''} - Same flat fee)
+                          Registration Fee
                         </p>
                       </div>
                     </div>
@@ -561,6 +574,19 @@ const SubmitProblem = () => {
                           </div>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Transaction ID */}
+                    <div className="space-y-2">
+                      <Label htmlFor="transactionId">Transaction ID *</Label>
+                      <Input
+                        id="transactionId"
+                        placeholder="Enter your transaction ID / UTR number"
+                        {...register("transactionId")}
+                      />
+                      {errors.transactionId && (
+                        <p className="text-destructive text-sm">{errors.transactionId.message}</p>
+                      )}
                     </div>
 
                     {/* Upload Payment Proof */}
