@@ -46,7 +46,7 @@ const HeroSection = () => {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black leading-tight">
               <span className="text-foreground">Transform Your</span>
               <br />
-              <span className="text-gradient">Business</span>
+              <span className="text-gradient">Technological</span>
               <br />
               <span className="text-gradient">Challenges</span>
               <br />
