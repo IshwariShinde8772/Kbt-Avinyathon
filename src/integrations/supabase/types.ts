@@ -31,6 +31,7 @@ export type Database = {
           resources_provided: string | null
           status: string
           targeted_audience: string | null
+          transaction_id: string | null
           updated_at: string
         }
         Insert: {
@@ -49,6 +50,7 @@ export type Database = {
           resources_provided?: string | null
           status?: string
           targeted_audience?: string | null
+          transaction_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -67,6 +69,7 @@ export type Database = {
           resources_provided?: string | null
           status?: string
           targeted_audience?: string | null
+          transaction_id?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -85,6 +88,7 @@ export type Database = {
           sponsorship_amount: string | null
           sponsorship_type: string
           status: string
+          transaction_id: string | null
           updated_at: string
         }
         Insert: {
@@ -100,6 +104,7 @@ export type Database = {
           sponsorship_amount?: string | null
           sponsorship_type: string
           status?: string
+          transaction_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -115,6 +120,7 @@ export type Database = {
           sponsorship_amount?: string | null
           sponsorship_type?: string
           status?: string
+          transaction_id?: string | null
           updated_at?: string
         }
         Relationships: []
