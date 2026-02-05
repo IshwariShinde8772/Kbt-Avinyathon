@@ -136,12 +136,9 @@ const SubmitProblem = () => {
     }
   };
 
-  const scrollToFormTop = () => {
-    if (formContainerRef.current) {
-      formContainerRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
-      // Add a small offset from the top
-      window.scrollBy({ top: -20, behavior: 'instant' });
-    }
+  const scrollToPageTop = () => {
+    // Scroll to the very top of the page instantly so user sees navbar/header
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const validateStep = async (step: number): Promise<boolean> => {
@@ -162,14 +159,16 @@ const SubmitProblem = () => {
     const isValid = await validateStep(currentStep);
     if (isValid && currentStep < 3) {
       setCurrentStep(currentStep + 1);
-      scrollToFormTop();
+      // Use setTimeout to ensure state update happens before scroll
+      setTimeout(() => scrollToPageTop(), 0);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
-      scrollToFormTop();
+      // Use setTimeout to ensure state update happens before scroll
+      setTimeout(() => scrollToPageTop(), 0);
     }
   };
 
@@ -273,7 +272,10 @@ const SubmitProblem = () => {
       toast.success("Problem statement(s) submitted successfully!", {
         description: `${data.problems.length} problem statement(s) submitted. We will review and get back to you soon.`,
       });
-      navigate("/");
+      // Navigate to home page and scroll to top immediately
+      navigate("/", { replace: true });
+      // Ensure scroll to top after navigation
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0);
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error("Error submitting:", error);
