@@ -29,6 +29,8 @@ const problemStatementSchema = z.object({
   contactName: z.string().min(2, "Contact name must be at least 2 characters").max(100),
   email: z.string().email("Please enter a valid email address").max(255),
   phone: z.string().min(10, "Please enter a valid phone number").max(15),
+  sourceOfInfo: z.string().min(1, "Please select a source of information"),
+  sourceOfInfoDetail: z.string().max(200).optional(),
   companyWebsite: z.string().url("Please enter a valid URL").max(255).optional().or(z.literal("")),
   problems: z.array(problemSchema).min(1, "At least one problem statement is required"),
   transactionId: z.string().min(5, "Please enter a valid transaction ID").max(100),
@@ -53,6 +55,13 @@ const steps = [
   { id: 3, title: "Payment", icon: CreditCard },
 ];
 
+const sourceOfInfoOptions = [
+  { value: "faculty", label: "Faculty", requiresDetail: true, detailPlaceholder: "Enter faculty name" },
+  { value: "website", label: "Website", requiresDetail: false },
+  { value: "social_media", label: "Social Media", requiresDetail: false },
+  { value: "other", label: "Other", requiresDetail: true, detailPlaceholder: "Where did you hear about this?" },
+];
+
 const SubmitProblem = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,6 +71,7 @@ const SubmitProblem = () => {
   const [isUploading, setIsUploading] = useState(false);
   const honeypotRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -126,9 +136,17 @@ const SubmitProblem = () => {
     }
   };
 
+  const scrollToFormTop = () => {
+    if (formContainerRef.current) {
+      formContainerRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
+      // Add a small offset from the top
+      window.scrollBy({ top: -20, behavior: 'instant' });
+    }
+  };
+
   const validateStep = async (step: number): Promise<boolean> => {
     if (step === 1) {
-      const result = await trigger(["companyName", "contactName", "email", "phone", "companyWebsite"]);
+      const result = await trigger(["companyName", "contactName", "email", "phone", "sourceOfInfo", "companyWebsite"]);
       return result;
     } else if (step === 2) {
       const result = await trigger(["problems"]);
@@ -144,12 +162,14 @@ const SubmitProblem = () => {
     const isValid = await validateStep(currentStep);
     if (isValid && currentStep < 3) {
       setCurrentStep(currentStep + 1);
+      scrollToFormTop();
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      scrollToFormTop();
     }
   };
 
@@ -319,7 +339,7 @@ const SubmitProblem = () => {
             </div>
 
             {/* Form Card */}
-            <div className="bg-background rounded-2xl shadow-xl p-6 md:p-8">
+            <div ref={formContainerRef} className="bg-background rounded-2xl shadow-xl p-6 md:p-8">
               <h1 className="text-2xl md:text-3xl font-heading font-black mb-2 text-foreground">
                 {steps[currentStep - 1].title}
               </h1>
@@ -385,6 +405,49 @@ const SubmitProblem = () => {
                         )}
                       </div>
                     </div>
+
+                    {/* Source of Information */}
+                    <div className="space-y-2">
+                      <Label>Source of Information *</Label>
+                      <Select 
+                        value={watch("sourceOfInfo")} 
+                        onValueChange={(value) => {
+                          setValue("sourceOfInfo", value);
+                          // Clear detail when source changes
+                          setValue("sourceOfInfoDetail", "");
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="How did you hear about us?" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sourceOfInfoOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.sourceOfInfo && (
+                        <p className="text-destructive text-sm">{errors.sourceOfInfo.message}</p>
+                      )}
+                    </div>
+
+                    {/* Conditional Detail Field for Faculty or Other */}
+                    {(watch("sourceOfInfo") === "faculty" || watch("sourceOfInfo") === "other") && (
+                      <div className="space-y-2">
+                        <Label htmlFor="sourceOfInfoDetail">
+                          {watch("sourceOfInfo") === "faculty" ? "Faculty Name *" : "Please Specify *"}
+                        </Label>
+                        <Input
+                          id="sourceOfInfoDetail"
+                          placeholder={
+                            sourceOfInfoOptions.find(o => o.value === watch("sourceOfInfo"))?.detailPlaceholder || ""
+                          }
+                          {...register("sourceOfInfoDetail")}
+                        />
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="companyWebsite">Company Website (Optional)</Label>
