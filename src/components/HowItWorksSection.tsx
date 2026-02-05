@@ -10,7 +10,7 @@ const steps = [
   {
     number: 2,
     title: "Screening & Shortlisting",
-    description: "Our expert committee reviews and shortlists the most suitable problem statements.",
+    description: "Problem statements are checked for clarity, completeness, and required structure.",
     date: "28 FEB 2026",
   },
   {

@@ -35,7 +35,7 @@ const sponsorshipTiers = [
     icon: Gift,
     color: "text-green-500",
     benefits: [
-      "Support First, Second, or Third prizes",
+      "Support overall First, Second, or Third prizes",
       "60% for student prize distribution",
       "40% for event organization",
       "Public acknowledgment during ceremonies"
@@ -60,12 +60,12 @@ const fundingInfo = [
 
 const contactPersons = [
   {
-    name: "Mrs. Tejaswini Deshmukh",
-    phone: "9403498919"
+    name: "Dr. S. B. Sonawane",
+    phone: "9167004398"
   },
   {
-    name: "Dr S. B. Sonawane",
-    phone: "9167004398"
+    name: "Mrs. Tejaswini Deshmukh",
+    phone: "9403498919"
   },
   {
     name: "Mr. Pritesh Aher",

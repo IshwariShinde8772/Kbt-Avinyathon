@@ -11,8 +11,8 @@ import {
 import { Phone, User } from "lucide-react";
 
 const contacts = [
+  { name: "Dr. S. B. Sonawane", phone: "9167004398" },
   { name: "Mrs. Tejaswini Deshmukh", phone: "9403498919" },
-  { name: "Dr S. B. Sonawane", phone: "9167004398" },
   { name: "Mr. Pritesh Aher", phone: "7588833992" },
 ];
 
