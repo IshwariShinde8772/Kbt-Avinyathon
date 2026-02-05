@@ -141,15 +141,40 @@ const SubmitProblem = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
+  const scrollToFirstError = () => {
+    // Find the first error element and scroll to it
+    setTimeout(() => {
+      const firstErrorElement = document.querySelector('.text-destructive');
+      if (firstErrorElement) {
+        const elementRect = firstErrorElement.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.pageYOffset;
+        // Scroll to position with offset for navbar visibility
+        window.scrollTo({
+          top: absoluteElementTop - 120,
+          behavior: 'instant'
+        });
+      }
+    }, 10);
+  };
+
   const validateStep = async (step: number): Promise<boolean> => {
     if (step === 1) {
       const result = await trigger(["companyName", "contactName", "email", "phone", "sourceOfInfo", "companyWebsite"]);
+      if (!result) {
+        scrollToFirstError();
+      }
       return result;
     } else if (step === 2) {
       const result = await trigger(["problems"]);
+      if (!result) {
+        scrollToFirstError();
+      }
       return result;
     } else if (step === 3) {
       const result = await trigger(["transactionId"]);
+      if (!result) {
+        scrollToFirstError();
+      }
       return result;
     }
     return true;
