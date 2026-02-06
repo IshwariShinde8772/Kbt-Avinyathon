@@ -153,6 +153,8 @@ serve(async (req) => {
       email: data.email,
       phone: data.phone,
       company_website: data.company_website || null,
+      source_of_info: data.source_of_info || null,
+      source_of_info_detail: data.source_of_info_detail || null,
       problem_title: data.problem_title,
       problem_description: data.problem_description,
       domain: data.domain,
