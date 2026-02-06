@@ -328,11 +328,11 @@ const SubmitProblem = () => {
             {/* Back Button */}
             <Button
               variant="ghost"
-              className="mb-4"
-              onClick={() => navigate(-1)}
+              className="mb-4 transition-all duration-300 hover:scale-105"
+              onClick={prevStep}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+              {currentStep === 1 ? "Back to Home" : "Previous Step"}
             </Button>
 
             {/* Step Indicator */}
