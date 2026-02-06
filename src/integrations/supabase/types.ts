@@ -29,6 +29,8 @@ export type Database = {
           problem_description: string
           problem_title: string
           resources_provided: string | null
+          source_of_info: string | null
+          source_of_info_detail: string | null
           status: string
           targeted_audience: string | null
           transaction_id: string | null
@@ -48,6 +50,8 @@ export type Database = {
           problem_description: string
           problem_title: string
           resources_provided?: string | null
+          source_of_info?: string | null
+          source_of_info_detail?: string | null
           status?: string
           targeted_audience?: string | null
           transaction_id?: string | null
@@ -67,6 +71,8 @@ export type Database = {
           problem_description?: string
           problem_title?: string
           resources_provided?: string | null
+          source_of_info?: string | null
+          source_of_info_detail?: string | null
           status?: string
           targeted_audience?: string | null
           transaction_id?: string | null
