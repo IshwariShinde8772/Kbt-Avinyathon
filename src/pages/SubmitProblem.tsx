@@ -137,8 +137,8 @@ const SubmitProblem = () => {
   };
 
   const scrollToPageTop = () => {
-    // Scroll to the very top of the page instantly so user sees navbar/header
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Scroll to the very top of the page smoothly so user sees navbar/header
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const scrollToFirstError = () => {
@@ -151,7 +151,7 @@ const SubmitProblem = () => {
         // Scroll to position with offset for navbar visibility
         window.scrollTo({
           top: absoluteElementTop - 120,
-          behavior: 'instant'
+          behavior: 'smooth'
         });
       }
     }, 10);
@@ -185,15 +185,18 @@ const SubmitProblem = () => {
     if (isValid && currentStep < 3) {
       setCurrentStep(currentStep + 1);
       // Use setTimeout to ensure state update happens before scroll
-      setTimeout(() => scrollToPageTop(), 0);
+      setTimeout(() => scrollToPageTop(), 50);
     }
   };
 
   const prevStep = () => {
-    if (currentStep > 1) {
+    if (currentStep === 1) {
+      // From Company Details, navigate to home page
+      navigate("/");
+    } else {
+      // Go to previous step and scroll to top smoothly
       setCurrentStep(currentStep - 1);
-      // Use setTimeout to ensure state update happens before scroll
-      setTimeout(() => scrollToPageTop(), 0);
+      setTimeout(() => scrollToPageTop(), 50);
     }
   };
 
@@ -750,24 +753,21 @@ const SubmitProblem = () => {
 
                 {/* Navigation Buttons */}
                 <div className="flex justify-between pt-4">
-                  {currentStep > 1 ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={prevStep}
-                    >
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Previous
-                    </Button>
-                  ) : (
-                    <div />
-                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={prevStep}
+                    className="transition-all duration-300 hover:scale-105"
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    {currentStep === 1 ? "Back to Home" : "Previous"}
+                  </Button>
 
                   {currentStep < 3 ? (
                     <Button
                       type="button"
                       onClick={nextStep}
-                      className="gradient-cta text-primary-foreground"
+                      className="gradient-cta text-primary-foreground transition-all duration-300 hover:scale-105"
                     >
                       Next
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -775,7 +775,7 @@ const SubmitProblem = () => {
                   ) : (
                     <Button
                       type="submit"
-                      className="gradient-cta text-primary-foreground font-semibold px-8"
+                      className="gradient-cta text-primary-foreground font-semibold px-8 transition-all duration-300 hover:scale-105"
                       disabled={isSubmitting || isUploading}
                     >
                       {isSubmitting || isUploading ? (
