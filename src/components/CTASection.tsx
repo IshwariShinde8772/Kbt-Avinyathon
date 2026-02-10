@@ -1,20 +1,5 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Phone, User } from "lucide-react";
-
-const contacts = [
-  { name: "Dr. S. B. Sonawane", phone: "9167004398" },
-  { name: "Mrs. Tejaswini Deshmukh", phone: "9403498919" },
-  { name: "Mr. Pritesh Aher", phone: "7588833992" },
-];
 
 const CTASection = () => {
   return (
@@ -38,43 +23,11 @@ const CTASection = () => {
                 Submit Problem Statement
               </Button>
             </Link>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button size="lg" variant="outline" className="px-8 py-6 text-lg rounded-xl border-2 border-foreground text-foreground hover:bg-muted">
-                  Schedule a Call
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-heading">Contact Us</DialogTitle>
-                  <DialogDescription>
-                    Reach out to our team for partnership inquiries
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 mt-4">
-                  {contacts.map((contact) => (
-                    <div
-                      key={contact.phone}
-                      className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <User className="w-5 h-5 text-primary" />
-                        </div>
-                        <span className="font-medium">{contact.name}</span>
-                      </div>
-                      <a
-                        href={`tel:${contact.phone}`}
-                        className="flex items-center gap-2 text-primary hover:underline font-semibold"
-                      >
-                        <Phone className="w-4 h-4" />
-                        {contact.phone}
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
+            <Link to="/contact">
+              <Button size="lg" variant="outline" className="px-8 py-6 text-lg rounded-xl border-2 border-foreground text-foreground hover:bg-muted">
+                Contact Us
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
