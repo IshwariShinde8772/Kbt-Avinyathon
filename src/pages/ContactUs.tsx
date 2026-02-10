@@ -30,7 +30,7 @@ const ContactUs = () => {
       <Header />
       <Navbar />
       <main className="py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto px-4 max-w-5xl">
           <h1 className="text-4xl md:text-5xl font-heading font-black text-center mb-4 text-foreground">
             Contact Us
           </h1>
@@ -42,7 +42,7 @@ const ContactUs = () => {
             {contacts.map((contact) => (
               <div
                 key={contact.phone}
-                className="rounded-2xl border bg-card p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+                className="rounded-2xl border bg-card p-8 shadow-sm hover:shadow-md transition-shadow duration-300 min-w-0"
               >
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                   <User className="w-6 h-6 text-primary" />
@@ -59,10 +59,10 @@ const ContactUs = () => {
                   </a>
                   <a
                     href={`mailto:${contact.email}`}
-                    className="flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors break-all"
+                    className="flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors whitespace-nowrap"
                   >
-                    <Mail className="w-4 h-4 text-primary" />
-                    {contact.email}
+                    <Mail className="w-4 h-4 text-primary shrink-0" />
+                    <span className="truncate">{contact.email}</span>
                   </a>
                 </div>
               </div>
