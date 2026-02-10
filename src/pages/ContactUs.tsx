@@ -6,7 +6,7 @@ import { Phone, Mail, User, Building } from "lucide-react";
 const contacts = [
   {
     name: "Dr. S. B. Sonawane",
-    role: "Event Coordinator, Dean R&D",
+    role: "Event Coordinator, Dean R&D.",
     phone: "9167004398",
     email: "sonawane.sandipkumar@kbtcoe.org",
   },
