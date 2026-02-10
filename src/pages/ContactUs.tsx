@@ -59,7 +59,7 @@ const ContactUs = () => {
                   </a>
                   <a
                     href={`mailto:${contact.email}`}
-                    className="flex items-center gap-2 text-xs text-foreground hover:text-primary transition-colors"
+                    className="flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors"
                   >
                     <Mail className="w-4 h-4 text-primary shrink-0" />
                     {contact.email}
