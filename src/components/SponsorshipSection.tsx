@@ -3,58 +3,68 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const sponsorshipTiers = [
   {
-    title: "Event Sponsorship",
-    amount: "₹75,000+",
+    title: "Platinum Sponsor",
+    amount: "₹1,00,000/- and above",
     icon: Star,
     color: "text-yellow-500",
     benefits: [
-      "Prominent mention on the KBT-AVINYATHON website",
-      "Logo display on banners, standees & all promotional material",
-      "Appreciation certificate & Acknowledgment during ceremonies",
-      "Opportunity to interact with shortlisted teams",
-      "Display company products/technologies at a kiosk",
-      "Exclusive Mention in Newsletter",
-      "Invitation as Chief Guest or Special Guest"
+      "Title branding: \"Hackathon powered by ___\"",
+      "Logo on all promotions (poster, banner, website, social media, certificates)",
+      "Keynote / Inaugural address (5–10 minutes)",
+      "Exclusive stall / booth at venue",
+      "Problem statement ownership (1–2 problem statements)",
+      "Mentorship & judging rights",
+      "Access to participant resumes / profiles",
+      "Branding on ID cards, backdrop, standees & prize certificates",
+      "Special award named after sponsor",
+      "Announcement in press release & media coverage",
+      "Opportunity to offer internships / PPOs"
     ]
   },
   {
-    title: "Title Sponsorship",
-    amount: "₹50,000+",
+    title: "Gold Sponsor",
+    amount: "₹50,000/- to ₹1,00,000/-",
     icon: Award,
     color: "text-primary",
     benefits: [
-      "Prominent mention on the KBT-AVINYATHON website",
-      "Appreciation certificate & stage acknowledgment",
-      "Company logo on banners & publicity material",
-      "Exclusive Mention in Newsletter"
+      "Logo on all major promotional materials",
+      "Speaking opportunity (welcome / tech talk – 5 minutes)",
+      "Dedicated stall / display space",
+      "One problem statement sponsorship",
+      "Mentorship participation",
+      "Branding on banners, standees, certificates, website & social media",
+      "Resume access (limited)",
+      "Sponsor mention during valedictory session",
+      "Opportunity to give special prize"
     ]
   },
   {
-    title: "Problem Statement Sponsor",
-    amount: "₹10,000 - ₹50,000",
+    title: "Silver Sponsor",
+    amount: "Below ₹50,000/-",
     icon: Gift,
     color: "text-green-500",
     benefits: [
-      "Support overall First, Second, or Third prizes",
-      "60% for student prize distribution",
-      "40% for event organization",
-      "Public acknowledgment during ceremonies"
+      "Logo on event banners, website & certificates",
+      "Sponsor acknowledgment during event",
+      "Shared display space (if applicable)",
+      "Social media mention (1–2 posts)",
+      "Branding in event report"
     ]
   }
 ];
 
 const fundingInfo = [
   {
-    title: "Industry Registration Fee",
-    description: "₹5,000 (non-refundable) flat fee for industries submitting one or multiple problem statements"
+    title: "Fund Utilization",
+    description: "Sponsorship amount utilized towards prize money, student kits, infrastructure, certificates, technical arrangements, trophies & event branding"
   },
   {
-    title: "Prize Funding",
-    description: "₹10,000 – ₹50,000 for top three winners"
+    title: "Transparent Process",
+    description: "All prizes distributed through official college procedures with proper documentation"
   },
   {
-    title: "Transparent Distribution",
-    description: "All prizes distributed through official college procedures"
+    title: "Acknowledgment",
+    description: "A signed fund utilization report / acknowledgment can be provided upon request"
   }
 ];
 
