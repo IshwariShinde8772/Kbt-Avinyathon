@@ -14,6 +14,8 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 // Allowed file types and max size
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const RESOURCE_ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+const RESOURCE_MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -111,6 +113,56 @@ serve(async (req) => {
       paymentProofUrl = fileName;
     }
 
+    // Handle resource file upload if provided
+    let resourceFileUrl: string | null = null;
+    if (data.resource_file_base64 && data.resource_file_filename && data.resource_file_type) {
+      if (!RESOURCE_ALLOWED_MIME_TYPES.includes(data.resource_file_type)) {
+        return new Response(JSON.stringify({ error: "Invalid resource file type. Allowed: JPG, PNG, WebP, PDF" }), { 
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        });
+      }
+
+      const resourceFileData = decode(data.resource_file_base64);
+      if (resourceFileData.length > RESOURCE_MAX_FILE_SIZE) {
+        return new Response(JSON.stringify({ error: "Resource file too large. Maximum size is 100MB" }), { 
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        });
+      }
+
+      const resFileExt = data.resource_file_filename.split('.').pop()?.toLowerCase() || 'bin';
+      const safeResExt = ['jpg', 'jpeg', 'png', 'webp', 'pdf'].includes(resFileExt) ? resFileExt : 'bin';
+      const resourceFileName = `${Date.now()}-${crypto.randomUUID()}.${safeResExt}`;
+
+      const { error: resUploadError } = await supabase.storage
+        .from('problem-resources')
+        .upload(resourceFileName, resourceFileData, {
+          contentType: data.resource_file_type,
+          upsert: false,
+        });
+
+      if (resUploadError) {
+        console.error("Resource file upload error:", resUploadError);
+        return new Response(JSON.stringify({ error: "Failed to upload resource file" }), { 
+          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        });
+      }
+
+      // Also upload to external storage if configured
+      if (externalSupabase) {
+        const { error: extResUploadError } = await externalSupabase.storage
+          .from('problem-resources')
+          .upload(resourceFileName, resourceFileData, {
+            contentType: data.resource_file_type,
+            upsert: false,
+          });
+        if (extResUploadError) {
+          console.error("External resource file upload error:", extResUploadError);
+        }
+      }
+
+      resourceFileUrl = resourceFileName;
+    }
+
     if (data.type === "sponsorship") {
       const insertData = {
         company_name: data.company_name,
@@ -162,6 +214,7 @@ serve(async (req) => {
       expected_outcome: data.expected_outcome,
       resources_provided: data.resources_provided || null,
       payment_proof_url: paymentProofUrl,
+      resource_file_url: resourceFileUrl,
       transaction_id: data.transaction_id || null,
       status: "pending",
     };

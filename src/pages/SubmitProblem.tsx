@@ -69,8 +69,11 @@ const SubmitProblem = () => {
   const [paymentProofFile, setPaymentProofFile] = useState<File | null>(null);
   const [paymentProofPreview, setPaymentProofPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [resourceFiles, setResourceFiles] = useState<Record<number, File | null>>({});
+  const [resourcePreviews, setResourcePreviews] = useState<Record<number, string | null>>({});
   const honeypotRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resourceFileInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -214,7 +217,48 @@ const SubmitProblem = () => {
   const removeProblemStatement = (index: number) => {
     if (fields.length > 1) {
       remove(index);
+      // Clean up resource file state for removed index
+      setResourceFiles(prev => {
+        const updated = { ...prev };
+        delete updated[index];
+        return updated;
+      });
+      setResourcePreviews(prev => {
+        const updated = { ...prev };
+        delete updated[index];
+        return updated;
+      });
     }
+  };
+
+  const handleResourceFileChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid file type", { description: "Please upload a JPG, PNG, WebP, or PDF file." });
+        return;
+      }
+      if (file.size > 100 * 1024 * 1024) {
+        toast.error("File too large", { description: "Please upload a file smaller than 100MB." });
+        return;
+      }
+      setResourceFiles(prev => ({ ...prev, [index]: file }));
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setResourcePreviews(prev => ({ ...prev, [index]: reader.result as string }));
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setResourcePreviews(prev => ({ ...prev, [index]: null }));
+      }
+    }
+  };
+
+  const removeResourceFile = (index: number) => {
+    setResourceFiles(prev => ({ ...prev, [index]: null }));
+    setResourcePreviews(prev => ({ ...prev, [index]: null }));
   };
 
   // Convert file to base64
@@ -258,7 +302,20 @@ const SubmitProblem = () => {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       
       // Submit each problem statement (edge function handles file upload securely)
-      for (const problem of data.problems) {
+      for (let i = 0; i < data.problems.length; i++) {
+        const problem = data.problems[i];
+        
+        // Convert resource file to base64 if present
+        let resourceFileBase64: string | undefined;
+        let resourceFileName: string | undefined;
+        let resourceFileType: string | undefined;
+        const resourceFile = resourceFiles[i];
+        if (resourceFile) {
+          resourceFileBase64 = await fileToBase64(resourceFile);
+          resourceFileName = resourceFile.name;
+          resourceFileType = resourceFile.type;
+        }
+
         const response = await fetch(`${supabaseUrl}/functions/v1/submit-problem`, {
           method: "POST",
           headers: {
@@ -280,6 +337,9 @@ const SubmitProblem = () => {
             payment_proof_base64: paymentProofBase64,
             payment_proof_filename: paymentProofFile.name,
             payment_proof_type: paymentProofFile.type,
+            resource_file_base64: resourceFileBase64,
+            resource_file_filename: resourceFileName,
+            resource_file_type: resourceFileType,
             honeypot: honeypotRef.current?.value || "",
           }),
         });
@@ -594,6 +654,56 @@ const SubmitProblem = () => {
                               rows={2}
                               {...register(`problems.${index}.resources`)}
                             />
+                          </div>
+
+                          {/* Resource File Upload (Optional) */}
+                          <div className="space-y-2">
+                            <Label>Upload Resource File (Optional)</Label>
+                            <p className="text-muted-foreground text-xs">
+                              Upload an image or PDF related to this problem statement (max 100MB).
+                            </p>
+                            <div 
+                              className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                              onClick={() => resourceFileInputRefs.current[index]?.click()}
+                            >
+                              <input
+                                type="file"
+                                ref={(el) => { resourceFileInputRefs.current[index] = el; }}
+                                onChange={(e) => handleResourceFileChange(index, e)}
+                                accept="image/jpeg,image/png,image/webp,application/pdf"
+                                className="hidden"
+                              />
+                              {resourceFiles[index] ? (
+                                <div className="space-y-2">
+                                  {resourcePreviews[index] ? (
+                                    <img src={resourcePreviews[index]!} alt="Resource preview" className="max-h-28 mx-auto rounded-lg" />
+                                  ) : (
+                                    <div className="w-12 h-12 bg-primary/10 rounded-lg mx-auto flex items-center justify-center">
+                                      <FileText className="w-6 h-6 text-primary" />
+                                    </div>
+                                  )}
+                                  <p className="text-foreground text-sm font-medium">{resourceFiles[index]!.name}</p>
+                                  <div className="flex items-center justify-center gap-2">
+                                    <span className="text-muted-foreground text-xs">Click to change</span>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      className="text-destructive text-xs h-6 px-2"
+                                      onClick={(e) => { e.stopPropagation(); removeResourceFile(index); }}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="space-y-1">
+                                  <Upload className="w-8 h-8 text-muted-foreground mx-auto" />
+                                  <p className="text-muted-foreground text-sm">Click to upload</p>
+                                  <p className="text-muted-foreground text-xs">JPG, PNG, WebP, or PDF (max 100MB)</p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
