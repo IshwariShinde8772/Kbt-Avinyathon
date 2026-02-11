@@ -28,6 +28,7 @@ export type Database = {
           phone: string
           problem_description: string
           problem_title: string
+          resource_file_url: string | null
           resources_provided: string | null
           source_of_info: string | null
           source_of_info_detail: string | null
@@ -49,6 +50,7 @@ export type Database = {
           phone: string
           problem_description: string
           problem_title: string
+          resource_file_url?: string | null
           resources_provided?: string | null
           source_of_info?: string | null
           source_of_info_detail?: string | null
@@ -70,6 +72,7 @@ export type Database = {
           phone?: string
           problem_description?: string
           problem_title?: string
+          resource_file_url?: string | null
           resources_provided?: string | null
           source_of_info?: string | null
           source_of_info_detail?: string | null
