@@ -42,8 +42,8 @@ const HeroSection = () => {
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-6 animate-fade-in">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black leading-tight">
+          <div className="space-y-6 animate-fade-in text-center lg:text-left">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black leading-tight text-center lg:text-left">
               <span className="text-foreground">Transform Your</span>
               <br />
               <span className="text-gradient">Technological</span>
